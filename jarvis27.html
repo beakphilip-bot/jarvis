@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%231fd97a'/%3E%3Cpolyline points='10,55 32,55 42,30 56,72 66,45 90,45' fill='none' stroke='%23ffffff' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkpBUlZJUyIsICJzaG9ydF9uYW1lIjogIkpBUlZJUyIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLCAic3RhcnRfdXJsIjogIi4iLCAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGIwYzEwIiwgInRoZW1lX2NvbG9yIjogIiMwYjBjMTAiLCAiaWNvbnMiOiBbeyJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBuYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNuSUhacFpYZENiM2c5SnpBZ01DQXhNREFnTVRBd0p6NDhjbVZqZENCM2FXUjBhRDBuTVRBd0p5Qm9aV2xuYUhROUp6RXdNQ2NnY25nOUp6STBKeUJtYVd4c1BTY2pNV1prT1RkaEp5OCtQSEJ2Ykhsc2FXNWxJSEJ2YVc1MGN6MG5NVEFzTlRVZ016SXNOVFVnTkRJc016QWdOVFlzTnpJZ05qWXNORFVnT1RBc05EVW5JR1pwYkd3OUoyNXZibVVuSUhOMGNtOXJaVDBuSTJabVptWm1aaWNnYzNSeWIydGxMWGRwWkhSb1BTYzVKeUJ6ZEhKdmEyVXRiR2x1WldOaGNEMG5jbTkxYm1RbklITjBjbTlyWlMxc2FXNWxhbTlwYmowbmNtOTFibVFuTHo0OEwzTjJaejQ9IiwgInNpemVzIjogImFueSIsICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiLCAicHVycG9zZSI6ICJhbnkgbWFza2FibGUifV19">
+<meta name="theme-color" content="#0b0c10">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JARVIS">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJz48cmVjdCB3aWR0aD0nMTAwJyBoZWlnaHQ9JzEwMCcgcng9JzI0JyBmaWxsPScjMWZkOTdhJy8+PHBvbHlsaW5lIHBvaW50cz0nMTAsNTUgMzIsNTUgNDIsMzAgNTYsNzIgNjYsNDUgOTAsNDUnIGZpbGw9J25vbmUnIHN0cm9rZT0nI2ZmZmZmZicgc3Ryb2tlLXdpZHRoPSc5JyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnLz48L3N2Zz4=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0c10;
+    --panel:#17181e;
+    --panel-2:#1e2027;
+    --accent:#1fd97a;
+    --accent-dim:#0e8f52;
+    --accent-soft:rgba(31,217,122,0.14);
+    --line: rgba(255,255,255,0.09);
+    --amber:#f0a940;
+    --text:#f2f3f5;
+    --text-muted:#888c96;
+    --danger:#ff5257;
+    --success:#1fd97a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+
+  /* GLOBALNI DRSNIKI V TEMI STRANI (namesto privzetih sivo-belih sistemskih) */
+  html{ scrollbar-width:thin; scrollbar-color:#454850 transparent; }
+  *{ scrollbar-width:thin; scrollbar-color:#454850 transparent; }
+  ::-webkit-scrollbar{ width:9px; height:9px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:#454850; border-radius:8px; }
+  ::-webkit-scrollbar-thumb:hover{ background:#5c606a; }
+  ::-webkit-scrollbar-corner{ background:transparent; }
+  body{
+    background:
+      radial-gradient(ellipse at 15% -10%, rgba(31,217,122,0.07), transparent 45%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  #boot-overlay{
+    position:fixed; inset:0; background:var(--bg); z-index:999;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    font-family:'Inter', sans-serif; color:var(--text);
+    transition:opacity 0.5s ease;
+  }
+  #boot-overlay .boot-mark{
+    width:44px; height:44px; border-radius:14px; background:var(--accent);
+    box-shadow:0 6px 20px rgba(31,217,122,0.35);
+    display:flex; align-items:center; justify-content:center; margin-bottom:14px;
+    animation:bootPulse 1.1s ease-in-out infinite;
+  }
+  @keyframes bootPulse{ 0%,100%{ opacity:0.7; transform:scale(0.94);} 50%{ opacity:1; transform:scale(1);} }
+  #boot-overlay .boot-label{ font-size:13px; color:var(--text-muted); letter-spacing:0.3px; }
+  #boot-overlay.hide{ opacity:0; pointer-events:none; }
+  /* varnostna mreža brez JavaScripta: zaslon se skrije sam po ~2.2 s, tudi če skripta ne teče */
+  #boot-overlay{ animation:bootAutoHide 0.5s ease 2.2s forwards; }
+  @keyframes bootAutoHide{ to{ opacity:0; visibility:hidden; pointer-events:none; } }
+
+  main{
+    position:relative; z-index:2;
+    max-width:1400px; margin:0 auto; padding:22px 26px 60px;
+    opacity:0; transform:translateY(8px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  main.show{ opacity:1; transform:none; }
+  main{ animation:mainAutoShow 0.5s ease 2.2s forwards; }
+  @keyframes mainAutoShow{ to{ opacity:1; transform:none; } }
+
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 22px; margin-bottom:24px;
+    border:1px solid var(--line); border-radius:20px;
+    background:var(--panel);
+    box-shadow:0 8px 24px rgba(0,0,0,0.35);
+    position:relative;
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .reactor{ width:42px; height:42px; position:relative; flex-shrink:0; border-radius:13px; background:linear-gradient(160deg, var(--accent), var(--accent-dim)); box-shadow:0 4px 14px rgba(31,217,122,0.35); display:flex; align-items:center; justify-content:center; }
+  .reactor svg.spark{ width:24px; height:24px; animation:sparkPulse 2.2s ease-in-out infinite; }
+  @keyframes sparkPulse{ 0%,100%{ transform:scale(1); opacity:0.9; } 50%{ transform:scale(1.1); opacity:1; } }
+  @keyframes pulseCore{ 0%,100%{ transform:scale(1); opacity:0.9;} 50%{ transform:scale(1.3); opacity:0.55;} }
+  .brand h1{
+    font-family:'Inter', sans-serif; font-weight:800; font-size:19px; letter-spacing:-0.2px;
+    margin:0; color:var(--text);
+  }
+  .brand p{ margin:1px 0 0; font-size:12.5px; letter-spacing:0.1px; color:var(--text-muted); font-family:'Inter', sans-serif; }
+  .clockbox{ text-align:right; font-family:'Inter', sans-serif; padding:2px 0; }
+  .clockbox .time{ font-size:19px; font-weight:700; color:var(--text); letter-spacing:-0.3px; }
+  .clockbox .date{ font-size:11.5px; color:var(--text-muted); margin-top:1px; }
+
+  #storage-warning{
+    display:none; margin-bottom:20px; padding:12px 16px; font-size:13px; line-height:1.5;
+    background:rgba(193,88,74,0.08); border:1px solid rgba(193,88,74,0.3); color:#a8453a;
+    border-radius:14px; font-family:'Inter', sans-serif;
+  }
+
+  .board{ display:grid; grid-template-columns:repeat(12, 1fr); gap:18px; }
+  .span-12{ grid-column:span 12; }
+  .span-8{ grid-column:span 8; }
+  .span-6{ grid-column:span 6; }
+  .span-4{ grid-column:span 4; }
+
+  .panel{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:20px 22px 22px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.3);
+  }
+
+  .panel h2{
+    font-family:'Inter', sans-serif; font-weight:700; font-size:11.5px; letter-spacing:1.1px; margin:0 0 4px;
+    color:var(--text-muted); display:flex; align-items:center; gap:8px; text-transform:uppercase;
+  }
+  .panel h2 .dot{ width:16px; height:16px; border-radius:6px; background:var(--accent-soft); flex-shrink:0; position:relative; }
+  .panel h2 .dot::after{ content:''; position:absolute; inset:5px; border-radius:2px; background:var(--accent); }
+  .panel .sub{ font-size:12.5px; color:var(--text-muted); font-family:'Inter', sans-serif; letter-spacing:0.1px; margin-bottom:14px; }
+  .divider{ height:1px; background:var(--line); margin-bottom:14px; }
+
+  input[type=text], input[type=time], textarea{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    font-family:'Inter', sans-serif; font-size:14px; padding:8px 10px; border-radius:10px;
+    outline:none; width:100%; color-scheme:dark;
+  }
+  input[type=text]:focus, input[type=time]:focus, textarea:focus{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  input[type=time]::-webkit-calendar-picker-indicator{
+    filter:invert(85%) sepia(35%) saturate(900%) hue-rotate(80deg) brightness(1.1);
+    cursor:pointer; opacity:0.9;
+  }
+  button{
+    background:var(--accent-soft); border:1px solid var(--accent-dim); color:var(--accent);
+    font-family:'Inter', sans-serif; font-weight:600; font-size:13px;
+    padding:8px 14px; cursor:pointer; border-radius:10px; transition:all 0.15s ease;
+  }
+  button:hover{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  button:active{ transform:scale(0.97); }
+  button:disabled{ opacity:0.4; cursor:not-allowed; }
+  .icon-btn{ background:transparent; border:none; color:var(--text-muted); padding:2px 6px; font-size:14px; }
+  .icon-btn:hover{ color:var(--danger); background:transparent; box-shadow:none; }
+  ::placeholder{ color:var(--text-muted); opacity:0.7; }
+
+  /* WEEKLY PLANNER */
+  .week-row{ display:grid; grid-template-columns:repeat(7, 1fr); gap:12px; }
+  .day-col{ background:var(--panel-2); border:1px solid var(--line); border-radius:12px; padding:10px; min-height:150px; }
+  .tasklist{ min-height:50px; }
+  .day-col h3{ font-family:'Inter',sans-serif; font-size:11px; letter-spacing:1px; color:var(--amber); margin:0 0 2px; text-transform:uppercase; }
+  .day-col .dnum{ font-size:10px; color:var(--text-muted); font-family:'Inter',sans-serif; margin-bottom:8px; display:block; }
+  .task-item{ display:flex; align-items:flex-start; gap:6px; font-size:13px; margin-bottom:6px; line-height:1.3; cursor:grab; padding:2px 3px; border-radius:6px; transition:background 0.12s ease; }
+  .task-item:active{ cursor:grabbing; }
+  .task-item.dragging{ opacity:0.35; }
+  .task-item.drag-over-hint{ background:var(--accent-soft); }
+  .task-item input[type=checkbox]{ margin:2px 0 0; width:14px; height:14px; accent-color:var(--accent); flex-shrink:0; box-sizing:border-box; }
+  .task-item.done span{ text-decoration:line-through; color:var(--text-muted); }
+  .task-item.missed span{ text-decoration:line-through; color:var(--text-muted); }
+  .miss-x{
+    width:14px; height:14px; margin:2px 0 0; flex-shrink:0; cursor:pointer; box-sizing:border-box;
+    background:#4a4d52; border-radius:3px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .miss-x:hover{ opacity:0.75; }
+  .task-item .del{ margin-left:auto; cursor:pointer; color:var(--text-muted); font-size:11px; flex-shrink:0; }
+  .task-item .del:hover{ color:var(--danger); }
+  .day-col input[type=text]{ font-size:12px; padding:5px 7px; margin-top:6px; }
+
+  /* NOTES / ZAPISKI */
+  .notes-text{ width:100%; min-height:340px; line-height:1.6; font-size:14px; font-family:'Inter',sans-serif; }
+  .notes-editable{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; color:var(--text); outline:none; overflow-y:auto;
+  }
+  .notes-editable:focus{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  #notes-preview-text{ max-height:340px; overflow-y:auto; }
+  .notes-editable:empty:before{ content:attr(data-placeholder); color:var(--text-muted); pointer-events:none; }
+  .notes-editable b, .notes-editable strong{ font-weight:700; }
+  .notes-editable ul{ padding-left:22px; margin:6px 0; }
+  .autosave-note{ font-size:11px; color:var(--text-muted); font-family:'Inter',sans-serif; margin-top:6px; text-align:right; }
+
+  /* MIND MAP */
+  .mindmap-controls{ display:flex; gap:8px; align-items:center; margin-bottom:6px; }
+  .mindmap-controls input{ flex:1; }
+  .mindmap-hint{ font-size:11px; color:var(--text-muted); font-family:'Inter',sans-serif; margin-bottom:12px; }
+  .mindmap-area{
+    position:relative; height:420px; border:1px solid var(--line); border-radius:12px; overflow:hidden; touch-action:none;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(31,217,122,0.05), transparent 70%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 32px);
+    background-color:var(--panel-2);
+    transition:height 0.2s ease;
+  }
+  .mindmap-svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .mindmap-svg line{ stroke:var(--accent); stroke-width:1.5; opacity:0.6; stroke-dasharray:5 5; animation:flowline 1.4s linear infinite; }
+  @keyframes flowline{ to{ stroke-dashoffset:-10; } }
+
+  /* MIND MAP - FULLSCREEN NAČIN */
+  #mindmap-section.fullscreen{
+    position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+    width:100vw !important; height:100vh !important; height:100dvh !important;
+    margin:0 !important; z-index:9999; border-radius:0;
+    display:flex; flex-direction:column; padding:20px 24px;
+    overflow:hidden; background:var(--bg);
+  }
+  #mindmap-section.fullscreen .mindmap-area{ flex:1; height:auto; }
+  body.mindmap-fullscreen-active{ overflow:hidden; }
+  .mindmap-fs-close{
+    display:none; position:fixed; top:18px; right:18px; z-index:10000;
+    width:38px; height:38px; border-radius:50%; align-items:center; justify-content:center;
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    font-size:16px; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.4);
+  }
+  .mindmap-fs-close:hover{ background:var(--danger); color:#0b0c10; border-color:var(--danger); }
+  #mindmap-section.fullscreen .mindmap-fs-close{ display:flex; }
+
+  /* DNEVNI PLAN - POLNOZASLONSKA ZAPISNIŠKA (VEČ STRANI) */
+  .notes-overlay{
+    display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+    width:100vw; height:100vh; height:100dvh; z-index:9999;
+    background:var(--bg); padding:20px 24px;
+  }
+  .notes-overlay.show{ display:block; }
+  .notes-overlay-inner{ display:flex; gap:22px; height:100%; }
+  .notes-sidebar{
+    width:250px; flex-shrink:0; display:flex; flex-direction:column;
+    border-right:1px solid var(--line); padding-right:18px;
+  }
+  .notes-sidebar-header{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px;
+    text-transform:uppercase; color:var(--text-muted);
+  }
+  .notes-list{ flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:4px; scrollbar-width:none; }
+  .notes-list::-webkit-scrollbar{ display:none; }
+  .notes-list-item{
+    padding:10px 12px; border-radius:10px; cursor:pointer; transition:background 0.15s ease;
+  }
+  .notes-list-item:hover{ background:var(--panel-2); }
+  .notes-list-item.active{ background:var(--accent-soft); }
+  .notes-list-item.dragging{ opacity:0.35; }
+  .notes-list-item{ cursor:grab; }
+  .notes-list-item:active{ cursor:grabbing; }
+  .notes-list-item .n-title{
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:700; color:var(--text);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .notes-list-item .n-snippet{
+    font-family:'Inter',sans-serif; font-size:11.5px; color:var(--text-muted); margin-top:2px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .notes-list-item .n-date{
+    font-family:'Inter',sans-serif; font-size:10.5px; color:var(--text-muted); opacity:0.7; margin-top:4px;
+  }
+  .notes-list-item .n-progress-row{ display:flex; align-items:center; gap:6px; margin-top:6px; }
+  .notes-list-item .n-progress-badge{
+    font-family:'Inter',sans-serif; font-size:10px; font-weight:700; color:#fff;
+    padding:2px 7px; border-radius:6px; background:var(--text-muted); flex-shrink:0;
+  }
+  .notes-list-item .n-progress-badge.done{ background:var(--success); }
+  .notes-list-item .n-progress-badge.partial{ background:var(--amber); }
+  .notes-list-item .n-progress-badge.empty{ background:var(--text-muted); }
+  .note-inline-checkbox{
+    width:14px; height:14px; accent-color:var(--accent); cursor:pointer;
+    vertical-align:middle; position:relative; top:-1px; margin-right:2px;
+  }
+  .notes-main{ flex:1; display:flex; flex-direction:column; min-width:0; }
+  .notes-fullscreen-textarea{ flex:1; min-height:0; height:100%; resize:none; font-size:15px; }
+  .notes-main-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+  .notes-delete-btn{
+    font-family:'Inter',sans-serif; font-size:11.5px; color:var(--text-muted); cursor:pointer;
+  }
+  .notes-delete-btn:hover{ color:var(--danger); }
+  body.notes-fullscreen-active{ overflow:hidden; }
+  .notes-fs-close-inline{
+    width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text-muted);
+    font-size:12px; cursor:pointer; flex-shrink:0;
+  }
+  .notes-fs-close-inline:hover{ background:var(--danger); color:#0b0c10; border-color:var(--danger); }
+  .notes-topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .notes-topbar .notes-toolbar{ margin-bottom:0; }
+  .notes-toolbar{ display:flex; gap:6px; margin-bottom:8px; }
+  .notes-toolbar button{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text-muted);
+    width:30px; height:28px; border-radius:7px; font-size:12.5px; font-family:'Inter',sans-serif;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer;
+  }
+  .notes-toolbar button:hover{ background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+  .notes-toolbar button.active{ background:var(--accent); color:#0b0c10; border-color:var(--accent); }
+  @media (max-width:720px){
+    .notes-overlay{ padding:16px; }
+    .notes-overlay-inner{ flex-direction:column; gap:14px; }
+    .notes-sidebar{ width:auto; border-right:none; border-bottom:1px solid var(--line); padding-right:0; padding-bottom:12px; max-height:180px; }
+  }
+  .node{
+    position:absolute; transform:translate(-50%,-50%); background:var(--panel);
+    border:1.5px solid var(--accent-dim); color:var(--text); font-size:12.5px; padding:8px 13px;
+    border-radius:8px; cursor:grab; user-select:none; max-width:160px; text-align:center; line-height:1.3;
+    box-shadow:0 2px 10px rgba(0,0,0,0.4); transition:box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .node:active{ cursor:grabbing; }
+  .node.linking{ border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft); }
+  .node .node-del{
+    position:absolute; top:-8px; right:-8px; width:16px; height:16px; border-radius:50%;
+    background:var(--danger); color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; opacity:0; transition:opacity 0.15s ease;
+  }
+  .node:hover .node-del{ opacity:1; }
+  .mindmap-empty{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:var(--text-muted); font-family:'Inter',sans-serif; font-size:12px; text-align:center; padding:20px;
+  }
+
+  /* WEALTH GOAL */
+  .wealth-box{ padding-top:4px; }
+  .wealth-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+  .wealth-label{ font-family:'Inter',sans-serif; font-size:11px; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; display:block; }
+  .wealth-pct{
+    font-family:'Inter',sans-serif; font-weight:700; font-size:12.5px; color:var(--success);
+    background:rgba(31,217,122,0.14); padding:4px 10px; border-radius:8px; flex-shrink:0;
+  }
+  .wealth-pct.down{ color:var(--danger); background:rgba(255,82,87,0.12); }
+  .wealth-total-amt{ font-family:'Inter',sans-serif; font-weight:800; font-size:34px; color:var(--text); letter-spacing:-0.5px; margin-top:6px; line-height:1.1; }
+  .wealth-goal-label{ font-family:'Inter',sans-serif; font-size:12.5px; color:var(--text-muted); display:block; margin:4px 0 14px; }
+  .wealth-goal-input{
+    background:transparent !important; border:none !important; border-radius:0 !important;
+    padding:0 !important; margin:0 !important; display:inline !important;
+    font:inherit !important; color:inherit !important; text-align:left; letter-spacing:inherit;
+  }
+  .wealth-goal-input:focus{ box-shadow:none !important; outline:none !important; color:inherit !important; }
+  .wealth-bar{ height:10px; background:var(--panel-2); border:1px solid var(--line); border-radius:6px; position:relative; overflow:hidden; }
+  .wealth-fill{ height:100%; background:linear-gradient(90deg, var(--accent-dim), var(--accent)); transition:width 0.4s ease; }
+  .wealth-divider{ height:1px; background:var(--line); margin:20px 0 16px; }
+  .wealth-accounts{ display:flex; flex-direction:column; gap:0; }
+  .wealth-account{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:11px 2px; border-bottom:1px solid var(--line);
+  }
+  .wealth-account:last-child{ border-bottom:none; }
+
+  /* FINANČNI PLANER */
+  .fin-inout-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
+  .fin-box{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:14px; padding:14px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .fin-box-label{ font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.6px; text-transform:uppercase; }
+  .fin-income .fin-box-label{ color:var(--success); }
+  .fin-expense .fin-box-label{ color:var(--danger); }
+  .fin-box input{ background:var(--panel); }
+  .fin-box button{ margin-top:2px; }
+  .fin-income button{ background:var(--success); border-color:var(--success); color:#0b0c10; font-weight:700; }
+  .fin-income button:hover{ background:#17b866; }
+  .fin-expense button{ background:var(--danger); border-color:var(--danger); color:#0b0c10; font-weight:700; }
+  .fin-expense button:hover{ background:#e8434f; }
+  @media (max-width:640px){ .fin-inout-grid{ grid-template-columns:1fr; } }
+
+  .fin-history{ display:flex; flex-direction:column; max-height:220px; overflow-y:auto; scrollbar-width:none; -ms-overflow-style:none; }
+  .fin-history::-webkit-scrollbar{ display:none; }
+  .fin-tx-row{
+    display:flex; align-items:center; gap:10px; padding:8px 4px;
+    border-bottom:1px solid var(--line); font-family:'Inter',sans-serif; font-size:13px;
+  }
+  .fin-tx-row:last-child{ border-bottom:none; }
+  .fin-tx-cat{ flex:1; color:var(--text); font-weight:600; }
+  .fin-tx-date{ color:var(--text-muted); font-size:11px; }
+  .fin-tx-amt{ font-weight:700; white-space:nowrap; }
+  .fin-tx-amt.income{ color:var(--success); }
+  .fin-tx-amt.expense{ color:var(--danger); }
+  .fin-tx-del{ color:var(--text-muted); cursor:pointer; font-size:12px; flex-shrink:0; }
+  .fin-tx-del:hover{ color:var(--danger); }
+  .fin-empty{ font-size:12.5px; color:var(--text-muted); font-family:'Inter',sans-serif; padding:10px 2px; }
+
+  .fin-charts-grid{ display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  .fin-chart-title{ font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.6px; text-transform:uppercase; margin:0 0 14px; }
+  .fin-chart-title.income{ color:var(--success); }
+  .fin-chart-title.expense{ color:var(--danger); }
+  @media (max-width:640px){ .fin-charts-grid{ grid-template-columns:1fr; } }
+  .fin-chart-wrap{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .fin-pie{ width:120px; height:120px; border-radius:50%; flex-shrink:0; background:var(--panel-2); transition:background 0.3s ease; }
+  .fin-legend{ display:flex; flex-direction:column; gap:9px; max-width:230px; }
+  .fin-legend-row{ display:flex; align-items:center; gap:7px; font-family:'Inter',sans-serif; font-size:12.5px; color:var(--text); flex-wrap:wrap; }
+  .fin-legend-dot{ width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+  .fin-legend-cat{ }
+  .fin-legend-pct{ color:var(--text-muted); font-size:11.5px; }
+  .fin-legend-amt{ font-weight:700; margin-left:auto; padding-left:8px; }
+  .wealth-account-label{ font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; color:var(--text); }
+  .wealth-input-row{ display:flex; align-items:center; gap:6px; background:var(--panel-2); border:1px solid var(--line); border-radius:999px; padding:7px 14px; }
+  .wealth-input-row input{ width:90px; text-align:right; font-family:'Inter',sans-serif; font-size:14px; font-weight:700; color:var(--accent); padding:0; background:transparent; border:none; border-radius:0; }
+  .wealth-input-row input:focus{ box-shadow:none; }
+  .wealth-suffix{ font-family:'Inter',sans-serif; font-size:13px; font-weight:700; color:var(--text-muted); flex-shrink:0; }
+  @media (max-width:640px){
+    .wealth-total-amt{ font-size:28px; }
+  }
+
+
+  /* QUOTES */
+  .quote-box{ min-height:140px; display:flex; flex-direction:column; justify-content:center; }
+  .quote-text{ font-size:18px; font-style:italic; line-height:1.4; color:var(--text); }
+  .quote-author{ margin-top:12px; font-family:'Inter',sans-serif; font-size:12px; color:var(--amber); letter-spacing:1px; text-transform:uppercase; }
+
+  .load-chart-wrap{
+    display:flex; gap:0; align-items:flex-start;
+    background:var(--panel-2); border:1px solid var(--line); border-radius:16px; padding:24px 18px 14px 8px;
+  }
+  .load-yaxis{
+    position:relative; width:30px; flex-shrink:0;
+    display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end;
+    height:260px; padding-right:8px;
+    font-family:'Inter',sans-serif; font-size:10px; font-weight:600; color:var(--text-muted);
+    border-right:1.5px solid var(--text-muted);
+  }
+  .load-yaxis::before{
+    content:''; position:absolute; top:-6px; right:-4px;
+    border-left:4px solid transparent; border-right:4px solid transparent; border-bottom:6px solid var(--text-muted);
+  }
+  .load-plot{ flex:1; display:flex; flex-direction:column; }
+  .load-bars-row{
+    display:flex; gap:16px; align-items:flex-end;
+    height:260px; border-bottom:1.5px solid var(--text-muted); position:relative;
+    padding-left:14px; box-sizing:border-box;
+  }
+  .load-bars-row::after{
+    content:''; position:absolute; right:-10px; bottom:-4px;
+    border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:6px solid var(--text-muted);
+  }
+  .load-col{ flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end; transition:opacity 0.2s ease; }
+  .load-col.locked{ opacity:0.45; }
+  .load-bar{
+    width:55%; min-height:0; border-radius:5px 5px 0 0;
+    transition:height 0.4s ease, background 0.3s ease;
+  }
+  .load-labels-row{ display:flex; gap:16px; margin-top:8px; padding-left:14px; }
+  .load-labels-row .load-col-label{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .load-labels-row .load-col-label.locked{ opacity:0.45; }
+  .load-day-label{ font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:0.6px; color:var(--text-muted); text-transform:uppercase; }
+  .load-frac{
+    font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; color:#fff;
+    padding:2px 8px; border-radius:7px; background:var(--text-muted);
+  }
+  .load-frac.ok{ background:var(--success); }
+  .load-frac.bad{ background:#4a4d52; }
+  .load-frac.mid{ background:var(--amber); }
+  .load-frac.empty{ visibility:hidden; }
+
+  .empty{ font-size:12px; color:var(--text-muted); font-family:'Inter',sans-serif; padding:8px 0; }
+
+  footer{ text-align:center; margin-top:36px; font-family:'Inter',sans-serif; font-size:11px; color:var(--text-muted); letter-spacing:1px; }
+  footer a{ color:var(--text-muted); cursor:pointer; text-decoration:underline; }
+  footer a:hover{ color:var(--accent); }
+  footer a#reset-all{ color:#4a4d52; font-weight:600; }
+  footer a#reset-all:hover{ color:#4a4d52; opacity:0.7; }
+
+  /* UNDO TOAST */
+  .undo-toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:11px 12px 11px 18px; display:flex; align-items:center; gap:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.45); z-index:5000;
+    font-family:'Inter',sans-serif; font-size:13px; color:var(--text);
+    opacity:0; pointer-events:none; transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .undo-toast.show{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+  .undo-toast button{
+    background:var(--accent-soft); border:1px solid var(--accent); color:var(--accent);
+    font-weight:700; padding:6px 14px; border-radius:8px; font-size:12.5px; white-space:nowrap;
+  }
+  .undo-toast button:hover{ background:var(--accent); color:#0b0c10; }
+
+  /* NEVELJAVEN VNOS */
+  .input-error{ border-color:var(--danger) !important; animation:inputShake 0.35s ease; }
+  @keyframes inputShake{
+    0%,100%{ transform:translateX(0); }
+    25%{ transform:translateX(-4px); }
+    75%{ transform:translateX(4px); }
+  }
+
+  /* ZELEN UTRIP OB OZNAČITVI NALOGE KOT OPRAVLJENO */
+  .task-item.flash-done{ animation:doneFlash 0.55s ease; border-radius:6px; }
+  @keyframes doneFlash{
+    0%{ background:rgba(31,217,122,0.4); }
+    100%{ background:transparent; }
+  }
+
+  #storage-badge{ color:var(--accent-dim); }
+
+  @media (max-width: 980px){
+    .span-8, .span-6, .span-4{ grid-column:span 12; }
+    .week-row{ grid-template-columns:repeat(auto-fit, minmax(130px,1fr)); }
+  }
+
+  /* ===== MOBILNI POGLED (samo ozki zasloni / dotik; namizje ostane nespremenjeno) ===== */
+  @media (max-width:640px){
+    main{ padding:calc(12px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px)); }
+    header{ padding:12px 14px; margin-bottom:14px; border-radius:18px; }
+    .brand{ gap:10px; min-width:0; }
+    .brand p{ font-size:11.5px; }
+    .clockbox .time{ font-size:17px; }
+    .panel{ padding-left:14px; padding-right:14px; }
+    /* iOS pri fokusu povečavi stran, če je pisava polj < 16px */
+    input[type=text], input[type=time], textarea, .notes-editable, [contenteditable]{ font-size:16px !important; }
+    .week-row{ gap:8px; }
+    .day-col{ min-height:0; padding:9px; }
+    .task-item .del{ font-size:15px; padding:6px 8px; margin:-6px -4px -6px auto; }
+    .load-labels-row{ gap:6px; }
+    .load-day-label{ font-size:9.5px; letter-spacing:0.2px; }
+    .mindmap-area{ height:360px; }
+    .fin-pie{ margin:0 auto; }
+  }
+  /* naprave brez miške: gumb za brisanje vozlišča naj bo vedno viden */
+  @media (hover:none){
+    .node .node-del{ opacity:0.9; width:22px; height:22px; top:-11px; right:-11px; font-size:12px; }
+    button:hover{ background:var(--accent-soft); border-color:var(--accent-dim); color:var(--accent); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<noscript>
+  <div style="position:fixed; inset:0; z-index:2000; background:#0b0c10; color:#f2f3f5; font-family:sans-serif; display:flex; align-items:center; justify-content:center; text-align:center; padding:24px;">
+    <div>
+      <div style="font-size:18px; font-weight:700; margin-bottom:10px;">JARVIS ne more teči v tem pogledu</div>
+      <div style="font-size:14px; color:#888c96; line-height:1.5;">Ta predogled ne izvaja JavaScripta.<br>Odpri datoteko v brskalniku (Safari/Chrome) ali iz spletnega naslova.</div>
+    </div>
+  </div>
+</noscript>
+<div id="boot-overlay">
+  <div class="boot-mark"><span></span></div>
+  <div class="boot-label">Nalagam JARVIS...</div>
+</div>
+
+<main id="main">
+  <header>
+    <div class="brand">
+      <div class="reactor">
+        <svg viewBox="0 0 100 100" class="spark">
+          <polyline points="10,55 32,55 42,30 56,72 66,45 90,45" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h1>JARVIS</h1>
+        <p>Osebni nadzorni center</p>
+      </div>
+    </div>
+    <div class="clockbox">
+      <div class="time" id="clock-time">00:00:00</div>
+      <div class="date" id="clock-date">— — —</div>
+    </div>
+  </header>
+
+  <div id="storage-warning" style="display:none;">
+    ⚠ Shranjevanje trenutno ni na voljo v tem brskalniku (npr. strogi zasebni način brskanja blokira lokalno shranjevanje) — podatki se ne bodo ohranili po zaprtju zavihka.
+  </div>
+
+  <div class="board">
+
+    <!-- WEEKLY PLANNER -->
+    <section class="panel span-12">
+      <h2><span class="dot"></span>Tedenski plan</h2>
+      <div class="divider"></div>
+      <div class="week-row" id="week-row"></div>
+    </section>
+
+    <!-- WEEK LOAD -->
+    <section class="panel span-12">
+      <div class="load-chart-wrap">
+        <div class="load-yaxis" id="load-yaxis"></div>
+        <div class="load-plot">
+          <div class="load-bars-row" id="load-chart"></div>
+          <div class="load-labels-row" id="load-labels"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DNEVNI PLAN -->
+    <section class="panel span-12" id="notes-preview-section">
+      <h2 style="display:flex; align-items:center; justify-content:space-between;">
+        <span style="display:inline-flex; align-items:center; gap:8px;"><span class="dot"></span>Dnevni plan</span>
+        <button id="notes-fullscreen-btn" class="icon-btn" title="Vsi zapiski" style="border:1px solid var(--line);color:var(--text-muted); font-size:14px; padding:5px 9px; line-height:1;">⤢</button>
+      </h2>
+      <div class="divider"></div>
+      <div class="notes-text notes-editable" id="notes-preview-text" contenteditable="true" data-placeholder=""></div>
+      <div class="autosave-note" id="notes-autosave">shranjeno</div>
+    </section>
+
+    <!-- NOTES FULLSCREEN OVERLAY -->
+    <div id="notes-overlay" class="notes-overlay">
+      <div class="notes-overlay-inner">
+        <div class="notes-sidebar">
+          <div class="notes-sidebar-header">
+            <span>Zapiski</span>
+            <button id="notes-add-btn" class="icon-btn" title="Nov zapisek" style="border:1px solid var(--line);color:var(--text-muted); font-size:12px; padding:4px 10px;">+ Nov</button>
+          </div>
+          <div class="notes-list" id="notes-list"></div>
+        </div>
+        <div class="notes-main">
+          <div class="notes-topbar">
+            <div class="notes-toolbar" data-target="fullscreen">
+              <button type="button" data-cmd="bold" title="Krepko (Ctrl+B)"><b>B</b></button>
+              <button type="button" data-cmd="italic" title="Ležeče (Ctrl+I)"><i>I</i></button>
+              <button type="button" data-cmd="underline" title="Podčrtano (Ctrl+U)"><u>U</u></button>
+              <button type="button" data-cmd="strikeThrough" title="Prečrtano"><s>S</s></button>
+              <button type="button" data-cmd="insertUnorderedList" title="Seznam">•≡</button>
+              <button type="button" data-cmd="checkbox" title="Vstavi kljukico">☑</button>
+            </div>
+            <button id="notes-close-btn" class="notes-fs-close-inline" title="Zapri celoten zaslon">✕</button>
+          </div>
+          <div id="notes-fullscreen-text" class="notes-text notes-editable notes-fullscreen-textarea" contenteditable="true" data-placeholder="Začni pisati..."></div>
+          <div class="notes-main-footer">
+            <span class="autosave-note" id="notes-fullscreen-autosave">shranjeno</span>
+            <span style="display:flex; align-items:center; gap:10px;">
+              <span class="n-progress-badge empty" id="notes-fullscreen-progress" style="display:none;"></span>
+              <span class="notes-delete-btn" id="notes-delete-btn" title="Izbriši ta zapisek">🗑️</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEALTH GOAL -->
+    <section class="panel span-12">
+      <h2><span class="dot"></span>Finančni cilj</h2>
+      <div class="divider"></div>
+      <div class="wealth-box">
+        <div class="wealth-top">
+          <span class="wealth-label">Skupni prihranki</span>
+          <div class="wealth-pct" id="wealth-pct">0%</div>
+        </div>
+        <div class="wealth-total-amt" id="wealth-current-label">0 €</div>
+        <span class="wealth-goal-label">Cilj: <input type="text" id="wealth-goal-input" class="wealth-goal-input" inputmode="numeric" spellcheck="false" value="20.000"> €</span>
+        <div class="wealth-bar"><div class="wealth-fill" id="wealth-fill"></div></div>
+
+        <div class="wealth-divider"></div>
+
+        <div class="wealth-accounts">
+          <div class="wealth-account">
+            <span class="wealth-account-label">Varčevalni račun</span>
+            <div class="wealth-input-row">
+              <input type="text" id="wealth-savings-input" inputmode="decimal" placeholder="0">
+              <span class="wealth-suffix">€</span>
+            </div>
+          </div>
+          <div class="wealth-account">
+            <span class="wealth-account-label">Bančni račun</span>
+            <div class="wealth-input-row">
+              <input type="text" id="wealth-bank-input" inputmode="decimal" placeholder="0">
+              <span class="wealth-suffix">€</span>
+            </div>
+          </div>
+          <div class="wealth-account">
+            <span class="wealth-account-label">Gotovina</span>
+            <div class="wealth-input-row">
+              <input type="text" id="wealth-cash2-input" inputmode="decimal" placeholder="0">
+              <span class="wealth-suffix">€</span>
+            </div>
+          </div>
+          <div class="wealth-account">
+            <span class="wealth-account-label">Drugo</span>
+            <div class="wealth-input-row">
+              <input type="text" id="wealth-cash-input" inputmode="decimal" placeholder="0">
+              <span class="wealth-suffix">€</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINANČNI PLANER -->
+    <section class="panel span-12">
+      <h2 style="display:flex; align-items:center; justify-content:space-between;">
+        <span style="display:inline-flex; align-items:center; gap:8px;"><span class="dot"></span>Finance</span>
+        <button id="fin-report-btn" class="icon-btn" title="Prenesi poročilo tega meseca" style="border:1px solid var(--line);color:var(--text-muted); font-size:11px; text-transform:none; letter-spacing:0; font-weight:600; padding:4px 10px;">poročilo</button>
+      </h2>
+      <div class="divider"></div>
+
+      <div class="fin-inout-grid">
+        <div class="fin-box fin-income">
+          <span class="fin-box-label">+ Prihodek</span>
+          <input type="text" id="fin-income-amount" inputmode="decimal" placeholder="Znesek (€)" spellcheck="false">
+          <input type="text" id="fin-income-category" placeholder="Vrsta" spellcheck="false">
+          <button id="fin-income-add">Dodaj</button>
+        </div>
+        <div class="fin-box fin-expense">
+          <span class="fin-box-label">− Odhodek</span>
+          <input type="text" id="fin-expense-amount" inputmode="decimal" placeholder="Znesek (€)" spellcheck="false">
+          <input type="text" id="fin-expense-category" placeholder="Vrsta" spellcheck="false">
+          <button id="fin-expense-add">Dodaj</button>
+        </div>
+      </div>
+
+      <div class="fin-history" id="fin-history"></div>
+
+      <div class="divider" style="margin-top:22px;"></div>
+      <div class="fin-charts-grid">
+        <div class="fin-chart-block">
+          <h3 class="fin-chart-title income">Prihodki po vrstah</h3>
+          <div class="fin-chart-wrap">
+            <div class="fin-pie" id="fin-pie-income"></div>
+            <div class="fin-legend" id="fin-legend-income"></div>
+          </div>
+        </div>
+        <div class="fin-chart-block">
+          <h3 class="fin-chart-title expense">Odhodki po vrstah</h3>
+          <div class="fin-chart-wrap">
+            <div class="fin-pie" id="fin-pie-expense"></div>
+            <div class="fin-legend" id="fin-legend-expense"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MIND MAP -->
+    <section class="panel span-12" id="mindmap-section">
+      <button id="mindmap-close-btn" class="mindmap-fs-close" title="Zapri celoten zaslon">✕</button>
+      <h2 style="display:flex; align-items:center; justify-content:space-between;">
+        <span style="display:inline-flex; align-items:center; gap:8px;"><span class="dot"></span>Cilji</span>
+        <button id="mindmap-fullscreen-btn" class="icon-btn" title="Celoten zaslon" style="border:1px solid var(--line);color:var(--text-muted); font-size:14px; padding:5px 9px; line-height:1;">⤢</button>
+      </h2>
+      <div class="divider"></div>
+      <div class="mindmap-controls">
+        <input type="text" id="node-input" spellcheck="false" placeholder="">
+        <button id="node-add-btn">+ Dodaj</button>
+        <button id="mindmap-clear" class="icon-btn" style="border:1px solid var(--line);color:var(--text-muted)">počisti</button>
+      </div>
+      <div class="mindmap-area" id="mindmap-area">
+        <svg id="mindmap-svg" class="mindmap-svg"></svg>
+      </div>
+    </section>
+
+    <!-- QUOTES -->
+    <section class="panel span-12">
+      <div class="quote-box">
+        <div class="quote-text" id="quote-text">—</div>
+        <div class="quote-author" id="quote-author">—</div>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="undo-toast" class="undo-toast">
+    <span id="undo-toast-msg">Izbrisano</span>
+    <button id="undo-toast-btn" type="button">Razveljavi</button>
+  </div>
+
+  <footer>
+    <a id="reset-all">ponastavi vse podatke</a>
+  </footer>
+</main>
+
+<script>
+(function(){
+  // ---------- boot sequence ----------
+  function showApp(){
+    const bootEl = document.getElementById('boot-overlay');
+    const mainEl = document.getElementById('main');
+    if(bootEl) bootEl.classList.add('hide');
+    if(mainEl) mainEl.classList.add('show');
+  }
+  // DOMContentLoaded se sproži takoj, ko je HTML/JS pripravljen - ne čaka na zunanje vire (npr. Google Fonts),
+  // kar prepreči, da bi stran ostala "prazna", če je internet v ozadju blokiran ali počasen.
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', () => setTimeout(showApp, 400));
+  } else {
+    setTimeout(showApp, 400);
+  }
+  // varnostna mreža - ne glede na vse, prikaži vsebino najkasneje po 2.5s
+  setTimeout(showApp, 2500);
+
+  // ---------- clock ----------
+  const days = ['Pon','Tor','Sre','Čet','Pet','Sob','Ned'];
+  const monthsSl = ['jan','feb','mar','apr','maj','jun','jul','avg','sep','okt','nov','dec'];
+  const monthsFullSl = ['Januar','Februar','Marec','April','Maj','Junij','Julij','Avgust','September','Oktober','November','December'];
+  function tick(){
+    const now = new Date();
+    document.getElementById('clock-time').textContent = now.toLocaleTimeString('sl-SI', {hour12:false});
+    const dayIdx = (now.getDay()+6)%7;
+    document.getElementById('clock-date').textContent =
+      days[dayIdx] + ', ' + now.getDate() + ' ' + monthsSl[now.getMonth()] + ' ' + now.getFullYear();
+  }
+  tick(); setInterval(tick, 1000);
+
+  let storageMode = 'none'; // 'claude' | 'local' | 'none'
+  async function checkStorage(){
+    const banner = document.getElementById('storage-warning');
+    // 1) Try Claude's artifact storage (works only inside claude.ai)
+    if(typeof window.storage !== 'undefined' && window.storage){
+      try{
+        await window.storage.set('axiom:__ping__', '1', false);
+        storageMode = 'claude';
+        updateStorageBadge();
+        return true;
+      }catch(e){ /* fall through to localStorage */ }
+    }
+    // 2) Fall back to plain browser localStorage (works when self-hosted outside Claude)
+    try{
+      localStorage.setItem('axiom:__ping__', '1');
+      localStorage.removeItem('axiom:__ping__');
+      storageMode = 'local';
+      updateStorageBadge();
+      return true;
+    }catch(e){ /* fall through to no storage */ }
+    // 3) Nothing works (e.g. strict private-browsing mode)
+    storageMode = 'none';
+    banner.style.display = 'block';
+    return false;
+  }
+  function updateStorageBadge(){
+    const badge = document.getElementById('storage-badge');
+    if(!badge) return;
+    badge.textContent = storageMode === 'claude' ? 'shranjevanje: claude oblak' : 'shranjevanje: lokalno v tem brskalniku';
+  }
+
+  // ---------- storage helpers (auto-routes to whichever backend is available) ----------
+  // ---------- tiha rezervna shramba (IndexedDB) - deluje vzporedno z localStorage ----------
+  // Namen: če brskalnik/orodje počisti localStorage, se podatki obnovijo iz IndexedDB (in obratno).
+  let idbPromise = null;
+  function openIdb(){
+    if(idbPromise) return idbPromise;
+    idbPromise = new Promise((resolve) => {
+      const giveUp = setTimeout(() => resolve(null), 1500); // če se baza ne odzove, nadaljuj brez nje
+      try{
+        const req = indexedDB.open('jarvis-backup-db', 1);
+        req.onupgradeneeded = () => { req.result.createObjectStore('kv'); };
+        req.onsuccess = () => { clearTimeout(giveUp); resolve(req.result); };
+        req.onerror = () => { clearTimeout(giveUp); resolve(null); };
+        req.onblocked = () => { clearTimeout(giveUp); resolve(null); };
+      }catch(e){ clearTimeout(giveUp); resolve(null); }
+    });
+    return idbPromise;
+  }
+  async function idbSet(key, strValue){
+    try{
+      const db = await openIdb();
+      if(!db) return;
+      db.transaction('kv','readwrite').objectStore('kv').put(strValue, key);
+    }catch(e){ /* tiho ignoriraj */ }
+  }
+  async function idbGet(key){
+    try{
+      const db = await openIdb();
+      if(!db) return null;
+      return await new Promise((resolve) => {
+        const giveUp = setTimeout(() => resolve(null), 1500);
+        try{
+          const req = db.transaction('kv','readonly').objectStore('kv').get(key);
+          req.onsuccess = () => { clearTimeout(giveUp); resolve(req.result || null); };
+          req.onerror = () => { clearTimeout(giveUp); resolve(null); };
+        }catch(e){ clearTimeout(giveUp); resolve(null); }
+      });
+    }catch(e){ return null; }
+  }
+
+  async function loadKey(key, fallback){
+    try{
+      if(storageMode === 'claude'){
+        const res = await window.storage.get(key, false);
+        if(res && res.value){ return JSON.parse(res.value); }
+        return fallback;
+      } else if(storageMode === 'local'){
+        let raw = localStorage.getItem(key);
+        if(!raw){
+          // localStorage prazen - poskusi obnoviti iz IndexedDB rezervne kopije
+          const backupRaw = await idbGet(key);
+          if(backupRaw){
+            raw = backupRaw;
+            try{ localStorage.setItem(key, backupRaw); }catch(e){}
+          }
+        }
+        return raw ? JSON.parse(raw) : fallback;
+      }
+      return fallback;
+    }catch(e){ return fallback; }
+  }
+  async function saveKey(key, value){
+    try{
+      if(storageMode === 'claude'){
+        await window.storage.set(key, JSON.stringify(value), false);
+      } else if(storageMode === 'local'){
+        const str = JSON.stringify(value);
+        localStorage.setItem(key, str);
+        idbSet(key, str); // tiha rezervna kopija, ne čakamo nanjo
+      }
+    }catch(e){ console.error('Napaka pri shranjevanju', key, e); }
+  }
+  function uid(){ return Math.random().toString(36).slice(2,9); }
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  // window.confirm() is blocked inside the sandboxed artifact iframe, so use an
+  // in-place "click again to confirm" pattern instead of native dialogs.
+  function armConfirm(el, actionFn, confirmText){
+    if(el.dataset.armed === '1'){
+      clearTimeout(el._armTimer);
+      el.dataset.armed = '0';
+      el.textContent = el.dataset.originalText;
+      actionFn();
+    } else {
+      el.dataset.originalText = el.textContent;
+      el.dataset.armed = '1';
+      el.textContent = confirmText || 'klikni še enkrat za potrditev';
+      el._armTimer = setTimeout(() => {
+        el.dataset.armed = '0';
+        el.textContent = el.dataset.originalText;
+      }, 3000);
+    }
+  }
+
+  // ================= WEEKLY PLANNER =================
+  // ================= UNDO TOAST (skupno za brisanje nalog/transakcij/vozlišč) =================
+  const undoToastEl = document.getElementById('undo-toast');
+  const undoToastMsgEl = document.getElementById('undo-toast-msg');
+  const undoToastBtnEl = document.getElementById('undo-toast-btn');
+  let activeUndoFn = null;
+  let activeUndoTimer = null;
+
+  function showUndoToast(label, undoFn){
+    if(activeUndoTimer) clearTimeout(activeUndoTimer);
+    activeUndoFn = undoFn;
+    undoToastMsgEl.textContent = label;
+    undoToastEl.classList.add('show');
+    activeUndoTimer = setTimeout(() => {
+      activeUndoFn = null;
+      undoToastEl.classList.remove('show');
+    }, 5000);
+  }
+  undoToastBtnEl.addEventListener('click', () => {
+    if(activeUndoFn){
+      clearTimeout(activeUndoTimer);
+      const fn = activeUndoFn;
+      activeUndoFn = null;
+      undoToastEl.classList.remove('show');
+      fn();
+    }
+  });
+
+  // ================= VIZUALNO OPOZORILO OB NEVELJAVNEM VNOSU =================
+  function flashInputError(el){
+    el.classList.remove('input-error');
+    void el.offsetWidth; // ponovno sproži animacijo, če je bila že prikazana
+    el.classList.add('input-error');
+    el.focus();
+    setTimeout(() => el.classList.remove('input-error'), 900);
+  }
+
+  // ================= ZELEN UTRIP OB OZNAČITVI NALOGE KOT OPRAVLJENO =================
+  function flashTaskDone(taskId){
+    const el = weekRow.querySelector(`.task-item[data-id="${taskId}"]`);
+    if(!el) return;
+    el.classList.add('flash-done');
+    setTimeout(() => el.classList.remove('flash-done'), 600);
+  }
+
+  let plannerData = {};
+  let draggedFromDay = null;
+  const weekRow = document.getElementById('week-row');
+
+  function currentWeekDates(){
+    const now = new Date();
+    const dayIdx = (now.getDay()+6)%7;
+    const monday = new Date(now); monday.setDate(now.getDate()-dayIdx);
+    return days.map((_,i)=>{ const d = new Date(monday); d.setDate(monday.getDate()+i); return d; });
+  }
+
+  function getDragAfterElement(container, y){
+    const items = [...container.querySelectorAll('.task-item:not(.dragging)')];
+    return items.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if(offset < 0 && offset > closest.offset){
+        return { offset, element: child };
+      }
+      return closest;
+    }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+  }
+
+  function renderPlanner(){
+    weekRow.innerHTML='';
+    const dates = currentWeekDates();
+    days.forEach((day, i) => {
+      const col = document.createElement('div'); col.className='day-col';
+      const tasks = plannerData[day] || [];
+      col.innerHTML = `
+        <h3>${day}</h3>
+        <span class="dnum">${dates[i].getDate()}. ${monthsSl[dates[i].getMonth()]}</span>
+        <div class="tasklist"></div>
+        <input type="text" placeholder="+ naloga" spellcheck="false" data-day="${day}">
+      `;
+      const list = col.querySelector('.tasklist');
+      list.dataset.day = day;
+      if(tasks.length===0){ list.innerHTML = '<div class="empty">ni nalog</div>'; }
+      const today0 = new Date(); today0.setHours(0,0,0,0);
+      const dayDate0 = new Date(dates[i]); dayDate0.setHours(0,0,0,0);
+      const isPastDay = dayDate0 < today0;
+      tasks.forEach(t => {
+        const item = document.createElement('div');
+        const missed = !t.done && isPastDay;
+        item.className = 'task-item' + (t.done ? ' done' : '') + (missed ? ' missed' : '');
+        item.draggable = true;
+        item.dataset.id = t.id;
+        const checkHtml = missed
+          ? `<span class="miss-x" title="ni opravljeno do polnoči"><svg viewBox="0 0 14 14" width="9" height="9"><path d="M3.5 3.5L10.5 10.5M10.5 3.5L3.5 10.5" style="stroke:var(--bg)" stroke-width="2.2" stroke-linecap="round"/></svg></span>`
+          : `<input type="checkbox" ${t.done?'checked':''}>`;
+        item.innerHTML = `${checkHtml}<span>${escapeHtml(t.text)}</span><span class="del">✕</span>`;
+        if(missed){
+          item.querySelector('.miss-x').addEventListener('click', () => {
+            t.done = true;
+            saveKey('axiom:planner', plannerData); renderPlanner();
+            flashTaskDone(t.id);
+          });
+        } else {
+          item.querySelector('input').addEventListener('change', e => {
+            t.done = e.target.checked;
+            saveKey('axiom:planner', plannerData); renderPlanner();
+            if(e.target.checked) flashTaskDone(t.id);
+          });
+        }
+        item.querySelector('.del').addEventListener('click', () => {
+          const idx = plannerData[day].findIndex(x=>x.id===t.id);
+          const removed = plannerData[day][idx];
+          plannerData[day] = plannerData[day].filter(x=>x.id!==t.id);
+          saveKey('axiom:planner', plannerData); renderPlanner();
+          showUndoToast('Naloga izbrisana', () => {
+            if(!plannerData[day]) plannerData[day] = [];
+            plannerData[day].splice(Math.min(idx, plannerData[day].length), 0, removed);
+            saveKey('axiom:planner', plannerData); renderPlanner();
+          });
+        });
+        item.addEventListener('dragstart', () => {
+          item.classList.add('dragging');
+          draggedFromDay = day;
+        });
+        item.addEventListener('dragend', () => {
+          item.classList.remove('dragging');
+          const destList = item.closest('.tasklist');
+          const destDay = destList ? destList.dataset.day : day;
+          const destIds = [...destList.querySelectorAll('.task-item')].map(el => el.dataset.id);
+
+          function findTask(id){
+            for(const d of days){
+              const found = (plannerData[d]||[]).find(x => x.id === id);
+              if(found) return found;
+            }
+            return null;
+          }
+
+          plannerData[destDay] = destIds.map(id => findTask(id)).filter(Boolean);
+          if(draggedFromDay && draggedFromDay !== destDay){
+            plannerData[draggedFromDay] = (plannerData[draggedFromDay]||[]).filter(x => !destIds.includes(x.id));
+          }
+          draggedFromDay = null;
+          saveKey('axiom:planner', plannerData);
+          renderPlanner();
+        });
+        list.appendChild(item);
+      });
+      col.addEventListener('dragover', e => {
+        e.preventDefault();
+        const dragging = document.querySelector('.task-item.dragging');
+        if(!dragging) return;
+        const afterEl = getDragAfterElement(list, e.clientY);
+        if(afterEl == null){ list.appendChild(dragging); }
+        else { list.insertBefore(dragging, afterEl); }
+      });
+      col.addEventListener('drop', e => e.preventDefault());
+      const input = col.querySelector('input[data-day]');
+      input.addEventListener('keydown', e => {
+        if(e.key==='Enter'){
+          if(!input.value.trim()){ flashInputError(input); return; }
+          if(!plannerData[day]) plannerData[day]=[];
+          plannerData[day].push({id:uid(), text:input.value.trim(), done:false});
+          saveKey('axiom:planner', plannerData);
+          renderPlanner();
+          const freshInput = weekRow.querySelector(`input[data-day="${day}"]`);
+          if(freshInput) freshInput.focus();
+        }
+      });
+      weekRow.appendChild(col);
+    });
+    renderWeekLoad();
+  }
+
+  // ================= ZAPISKI (več strani, s polnozaslonskim pogledom) =================
+  const notesPreviewEl = document.getElementById('notes-preview-text');
+  const notesAutosave = document.getElementById('notes-autosave');
+  const notesFsEl = document.getElementById('notes-fullscreen-text');
+  const notesFsAutosave = document.getElementById('notes-fullscreen-autosave');
+  const notesListEl = document.getElementById('notes-list');
+  const notesOverlay = document.getElementById('notes-overlay');
+
+  let notesPages = []; // [{id, html, updatedAt}] - vrstni red v polju = ročni vrstni red (kot pri nalogah)
+  let currentNoteId = null;
+  let notesDraggedId = null;
+
+  function getLastNote(){
+    // zapisek za predogled na glavni strani = ZGORNJI (prvi) v ročnem vrstnem redu
+    return notesPages.length ? notesPages[0] : null;
+  }
+  function plainTextFromHtml(html){
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html || '';
+    return (tmp.textContent || '').replace(/\s+/g,' ').trim();
+  }
+  function firstLineFromHtml(html){
+    // pretvori dejanske prelome vrstic (br/div/p, kot jih ustvari contenteditable) v \n,
+    // šele nato izlušči navadno besedilo - da lahko zanesljivo vzamemo SAMO prvo vrstico
+    const withBreaks = (html || '')
+      .replace(/<div[^>]*>/gi, '\n')
+      .replace(/<\/div>/gi, '')
+      .replace(/<p[^>]*>/gi, '\n')
+      .replace(/<\/p>/gi, '')
+      .replace(/<br\s*\/?>/gi, '\n');
+    const tmp = document.createElement('div');
+    tmp.innerHTML = withBreaks;
+    const lines = (tmp.textContent || '').split('\n').map(l=>l.trim()).filter(Boolean);
+    return lines[0] || '';
+  }
+  function noteTitle(note){
+    const line = firstLineFromHtml(note.html);
+    return line ? (line.length > 60 ? line.slice(0,60)+'…' : line) : 'Nov zapisek';
+  }
+  function relativeDate(ts){
+    const d = new Date(ts);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const dOnly = new Date(d); dOnly.setHours(0,0,0,0);
+    const diffDays = Math.round((today - dOnly) / 86400000);
+    if(diffDays === 0) return 'danes ' + d.toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit'});
+    if(diffDays === 1) return 'včeraj';
+    return d.getDate() + '. ' + monthsSl[d.getMonth()];
+  }
+
+  function ensureAtLeastOneNote(){
+    if(notesPages.length === 0){
+      notesPages.push({ id: uid(), html: '', updatedAt: Date.now() });
+    }
+  }
+
+  function renderNotesPreview(){
+    ensureAtLeastOneNote();
+    const last = getLastNote();
+    notesPreviewEl.innerHTML = last.html;
+    notesPreviewEl.dataset.noteId = last.id;
+  }
+
+  function renderNotesList(){
+    notesListEl.innerHTML = notesPages.map(n => {
+      const prog = noteCheckProgress(n.html);
+      let badgeHtml = '';
+      if(prog.total > 0){
+        const pct = Math.round((prog.done/prog.total)*100);
+        const cls = pct === 100 ? 'done' : (pct === 0 ? 'empty' : 'partial');
+        badgeHtml = `<div class="n-progress-row"><span class="n-progress-badge ${cls}">${prog.done}/${prog.total}</span></div>`;
+      }
+      return `
+      <div class="notes-list-item ${n.id===currentNoteId?'active':''}" draggable="true" data-id="${n.id}">
+        <div class="n-title">${escapeHtml(noteTitle(n))}</div>
+        <div class="n-date">${relativeDate(n.updatedAt)}</div>
+        ${badgeHtml}
+      </div>
+    `;
+    }).join('');
+    notesListEl.querySelectorAll('.notes-list-item').forEach(el => {
+      el.addEventListener('click', () => selectNote(el.dataset.id));
+      el.addEventListener('dragstart', () => { notesDraggedId = el.dataset.id; el.classList.add('dragging'); });
+      el.addEventListener('dragend', () => {
+        el.classList.remove('dragging');
+        const newOrderIds = [...notesListEl.querySelectorAll('.notes-list-item')].map(x=>x.dataset.id);
+        notesPages = newOrderIds.map(id => notesPages.find(n=>n.id===id)).filter(Boolean);
+        saveNotesPages();
+        renderNotesPreview();
+      });
+    });
+    notesListEl.addEventListener('dragover', e => {
+      e.preventDefault();
+      const dragging = notesListEl.querySelector('.notes-list-item.dragging');
+      if(!dragging) return;
+      const after = [...notesListEl.querySelectorAll('.notes-list-item:not(.dragging)')].find(el => {
+        const rect = el.getBoundingClientRect();
+        return e.clientY < rect.top + rect.height/2;
+      });
+      if(after == null){ notesListEl.appendChild(dragging); }
+      else { notesListEl.insertBefore(dragging, after); }
+    });
+  }
+
+  function updateFsProgressBadge(){
+    const badge = document.getElementById('notes-fullscreen-progress');
+    const note = notesPages.find(n=>n.id===currentNoteId);
+    if(!note){ badge.style.display='none'; return; }
+    const prog = noteCheckProgress(note.html);
+    if(prog.total === 0){ badge.style.display='none'; return; }
+    const pct = Math.round((prog.done/prog.total)*100);
+    badge.className = 'n-progress-badge ' + (pct===100?'done':(pct===0?'empty':'partial'));
+    badge.textContent = prog.done + '/' + prog.total;
+    badge.style.display = 'inline-block';
+  }
+
+  function selectNote(id){
+    const note = notesPages.find(n=>n.id===id);
+    if(!note) return;
+    currentNoteId = id;
+    notesFsEl.innerHTML = note.html;
+    renderNotesList();
+    updateFsProgressBadge();
+    notesFsEl.focus();
+  }
+
+  function saveNotesPages(){
+    saveKey('axiom:notes-pages', notesPages);
+  }
+
+  // orodna vrstica (krepko/ležeče/podčrtano/prečrtano/seznam)
+  document.querySelectorAll('.notes-toolbar button[data-cmd]').forEach(btn => {
+    btn.addEventListener('mousedown', e => e.preventDefault()); // ne izgubi fokusa iz urejevalnika
+    btn.addEventListener('click', () => {
+      const toolbar = btn.closest('.notes-toolbar');
+      const target = toolbar.dataset.target === 'preview' ? notesPreviewEl : notesFsEl;
+      target.focus();
+      if(btn.dataset.cmd === 'checkbox'){
+        document.execCommand('insertHTML', false,
+          '<input type="checkbox" class="note-inline-checkbox">&nbsp;');
+      } else {
+        document.execCommand(btn.dataset.cmd, false, null);
+      }
+      target.dispatchEvent(new Event('input', {bubbles:true}));
+      updateToolbarActiveState(toolbar);
+    });
+  });
+
+  // posodobi katera orodja so "aktivna" (zelena) glede na formatiranje na trenutnem mestu kurzorja
+  const TOOLBAR_STATE_CMDS = ['bold','italic','underline','strikeThrough','insertUnorderedList'];
+  function updateToolbarActiveState(toolbar){
+    TOOLBAR_STATE_CMDS.forEach(cmd => {
+      const btn = toolbar.querySelector(`button[data-cmd="${cmd}"]`);
+      if(!btn) return;
+      let isActive = false;
+      try{ isActive = document.queryCommandState(cmd); }catch(e){ isActive = false; }
+      btn.classList.toggle('active', isActive);
+    });
+  }
+  function bindToolbarSync(editableEl, toolbar){
+    const handler = () => {
+      // preveri, da je selekcija dejansko znotraj tega urejevalnika, preden posodobimo njegovo orodno vrstico
+      const sel = document.getSelection();
+      if(sel && sel.anchorNode && editableEl.contains(sel.anchorNode)){
+        updateToolbarActiveState(toolbar);
+      }
+    };
+    editableEl.addEventListener('keyup', handler);
+    editableEl.addEventListener('mouseup', handler);
+    editableEl.addEventListener('focus', handler);
+    document.addEventListener('selectionchange', handler);
+  }
+  bindToolbarSync(notesFsEl, document.querySelector('.notes-toolbar[data-target="fullscreen"]'));
+
+  // sinhroniziraj checked ATRIBUT z dejanskim stanjem, ko uporabnik klikne kljukico
+  // (brskalnik privzeto spremeni samo "property", ne pa HTML atributa, ki ga beremo pri shranjevanju)
+  function bindNoteCheckboxSync(container){
+    container.addEventListener('change', e => {
+      if(e.target && e.target.matches('input[type=checkbox]')){
+        if(e.target.checked) e.target.setAttribute('checked','');
+        else e.target.removeAttribute('checked');
+        container.dispatchEvent(new Event('input', {bubbles:true}));
+      }
+    });
+  }
+  bindNoteCheckboxSync(notesPreviewEl);
+  bindNoteCheckboxSync(notesFsEl);
+
+  // izračun napredka kljukic (opravljeno/skupaj) za posamezen zapisek
+  function noteCheckProgress(html){
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html || '';
+    const boxes = [...tmp.querySelectorAll('input[type=checkbox]')];
+    const total = boxes.length;
+    const done = boxes.filter(b => b.hasAttribute('checked')).length;
+    return { total, done };
+  }
+
+  // predogled na glavni strani
+  let notesTimer;
+  notesPreviewEl.addEventListener('input', () => {
+    const id = notesPreviewEl.dataset.noteId;
+    const note = notesPages.find(n=>n.id===id);
+    if(!note) return;
+    note.html = notesPreviewEl.innerHTML;
+    note.updatedAt = Date.now();
+    notesAutosave.textContent = 'shranjujem...';
+    clearTimeout(notesTimer);
+    notesTimer = setTimeout(async () => {
+      await saveNotesPages();
+      notesAutosave.textContent = 'shranjeno ' + new Date().toLocaleTimeString('sl-SI',{hour12:false});
+    }, 600);
+  });
+
+  // urejanje v polnozaslonskem pogledu
+  let notesFsTimer;
+  notesFsEl.addEventListener('input', () => {
+    const note = notesPages.find(n=>n.id===currentNoteId);
+    if(!note) return;
+    note.html = notesFsEl.innerHTML;
+    note.updatedAt = Date.now();
+    updateFsProgressBadge();
+    notesFsAutosave.textContent = 'shranjujem...';
+    clearTimeout(notesFsTimer);
+    notesFsTimer = setTimeout(async () => {
+      await saveNotesPages();
+      notesFsAutosave.textContent = 'shranjeno ' + new Date().toLocaleTimeString('sl-SI',{hour12:false});
+      // posodobi naslov/datum/badge v seznamu, brez ponovnega izrisa cele vrstice (ohrani fokus v urejevalniku)
+      const row = notesListEl.querySelector(`.notes-list-item[data-id="${currentNoteId}"]`);
+      if(row){
+        const rowTitle = row.querySelector('.n-title');
+        if(rowTitle) rowTitle.textContent = noteTitle(note);
+
+        const prog = noteCheckProgress(note.html);
+        let progRow = row.querySelector('.n-progress-row');
+        if(prog.total > 0){
+          const pct = Math.round((prog.done/prog.total)*100);
+          const cls = pct === 100 ? 'done' : (pct === 0 ? 'empty' : 'partial');
+          if(!progRow){
+            progRow = document.createElement('div');
+            progRow.className = 'n-progress-row';
+            progRow.innerHTML = `<span class="n-progress-badge"></span>`;
+            row.appendChild(progRow);
+          }
+          const badgeEl = progRow.querySelector('.n-progress-badge');
+          badgeEl.className = 'n-progress-badge ' + cls;
+          badgeEl.textContent = prog.done + '/' + prog.total;
+        } else if(progRow){
+          progRow.remove();
+        }
+      }
+    }, 600);
+  });
+
+  document.getElementById('notes-add-btn').addEventListener('click', () => {
+    const newNote = { id: uid(), html: '', updatedAt: Date.now() };
+    notesPages.push(newNote);
+    saveNotesPages();
+    selectNote(newNote.id);
+  });
+
+  document.getElementById('notes-delete-btn').addEventListener('click', () => {
+    if(notesPages.length <= 1) return; // vedno pusti vsaj en zapisek
+    const idx = notesPages.findIndex(n=>n.id===currentNoteId);
+    if(idx === -1) return;
+    const removed = notesPages[idx];
+    notesPages = notesPages.filter(n=>n.id!==currentNoteId);
+    saveNotesPages();
+    const nextNote = getLastNote();
+    selectNote(nextNote.id);
+    renderNotesPreview();
+    showUndoToast('Zapisek izbrisan', () => {
+      notesPages.splice(Math.min(idx, notesPages.length), 0, removed);
+      saveNotesPages();
+      selectNote(removed.id);
+      renderNotesPreview();
+    });
+  });
+
+  document.getElementById('notes-fullscreen-btn').addEventListener('click', () => {
+    ensureAtLeastOneNote();
+    currentNoteId = currentNoteId || getLastNote().id;
+    renderNotesList();
+    selectNote(currentNoteId);
+    notesOverlay.classList.add('show');
+    document.body.classList.add('notes-fullscreen-active');
+  });
+
+  function closeNotesFullscreen(){
+    notesOverlay.classList.remove('show');
+    document.body.classList.remove('notes-fullscreen-active');
+    renderNotesPreview(); // osveži predogled na glavni strani, če se je spremenil zadnji zapisek
+  }
+  document.getElementById('notes-close-btn').addEventListener('click', closeNotesFullscreen);
+
+  // ================= QUOTES =================
+  const quotes = [
+    {t:"Great leaders inspire greatness in others.", a:""},
+    {t:"Belief is not a matter of choice, but of conviction.", a:""},
+    {t:"Easy is the path to wisdom for those not blinded by themselves.", a:""},
+    {t:"A plan is only as good as those who see it through.", a:""},
+    {t:"The best confidence builder is experience.", a:""},
+    {t:"Trust in your friends, and they'll have reason to trust in you.", a:""},
+    {t:"You hold onto friends by keeping your heart a little softer than your head.", a:""},
+    {t:"Heroes are made by the times.", a:""},
+    {t:"Ignore your instincts at your peril.", a:""},
+    {t:"Most powerful is he who controls his own power.", a:""},
+    {t:"The winding path to peace is always a worthy one, regardless of how many turns it takes.", a:""},
+    {t:"Fail with honor rather than succeed by fraud.", a:""},
+    {t:"Greed and fear of loss are the roots that lead to the tree of evil.", a:""},
+    {t:"When surrounded by war, one must eventually choose a side.", a:""},
+    {t:"Arrogance diminishes wisdom.", a:""},
+    {t:"Truth enlightens the mind, but won't always bring happiness to your heart.", a:""},
+    {t:"Fear is a disease; hope is its only cure.", a:""},
+    {t:"A single chance is a galaxy of hope.", a:""},
+    {t:"It is a rough road that leads to the heights of greatness.", a:""},
+    {t:"The costs of war can never be truly accounted for.", a:""},
+    {t:"Compromise is a virtue to be cultivated, not a weakness to be despised.", a:""},
+    {t:"A secret shared is a trust formed.", a:""},
+    {t:"A lesson learned is a lesson earned.", a:""},
+    {t:"Overconfidence is the most dangerous form of carelessness.", a:""},
+    {t:"The first step to correcting a mistake is patience.", a:""},
+    {t:"A true heart should never be doubted.", a:""},
+    {t:"Believe in yourself or no one else will.", a:""},
+    {t:"No gift is more precious than trust.", a:""},
+    {t:"Sometimes, accepting help is harder than offering it.", a:""},
+    {t:"Attachment is not compassion.", a:""},
+    {t:"For everything you gain, you lose something else.", a:""},
+    {t:"It is the quest for honor that makes one honorable.", a:""},
+    {t:"Easy isn't always simple.", a:""},
+    {t:"If you ignore the past, you jeopardize your future.", a:""},
+    {t:"Fear not for the future, weep not for the past.", a:""},
+    {t:"In war, truth is the first casualty.", a:""},
+    {t:"Searching for the truth is easy. Accepting the truth is hard.", a:""},
+    {t:"A wise leader knows when to follow.", a:""},
+    {t:"Courage makes heroes, but trust builds friendship.", a:""},
+    {t:"Choose what is right, not what is easy.", a:""},
+    {t:"The most dangerous beast is the beast within.", a:""},
+    {t:"Who my father was matters less than my memory of him.", a:""},
+    {t:"Adversity is a friendship's truest test.", a:""},
+    {t:"Revenge is a confession of pain.", a:""},
+    {t:"Brothers in arms are brothers for life.", a:""},
+    {t:"Fighting a war tests a soldier's skills, defending his home tests a soldier's heart.", a:""},
+    {t:"Where there's a will, there's a way.", a:""},
+    {t:"A child stolen is a hope lost.", a:""},
+    {t:"The challenge of hope is to overcome corruption.", a:""},
+    {t:"Those who enforce the law must obey the law.", a:""},
+    {t:"The future has many paths – choose wisely.", a:""},
+    {t:"A failure in planning is a plan for failure.", a:""},
+    {t:"Love comes in all shapes and sizes.", a:""},
+    {t:"Fear is a great motivator.", a:""},
+    {t:"Truth can strike down the spectre of fear.", a:""},
+    {t:"The swiftest path to destruction is through vengeance.", a:""},
+    {t:"Evil is not born, it is taught.", a:""},
+    {t:"The path to evil may bring great power, but not loyalty.", a:""},
+    {t:"Balance is found in the one who faces his guilt.", a:""},
+    {t:"He who surrenders hope, surrenders life.", a:""},
+    {t:"He who seeks to control fate shall never find peace.", a:""},
+    {t:"Adaptation is the key to survival.", a:""},
+    {t:"Anything that can go wrong will.", a:""},
+    {t:"Without honor, victory is hollow.", a:""},
+    {t:"Without humility, courage is a dangerous game.", a:""},
+    {t:"A great student is what the teacher hopes to be.", a:""},
+    {t:"When destiny calls, the chosen have no choice.", a:""},
+    {t:"Only through fire is a strong sword forged.", a:""},
+    {t:"Crowns are inherited, kingdoms are earned.", a:""},
+    {t:"Who a person truly is cannot be seen with the eye.", a:""},
+    {t:"Understanding is honoring the truth beneath the surface.", a:""},
+    {t:"Who's the more foolish, the fool or the fool who follows him?", a:""},
+    {t:"The first step toward loyalty is trust.", a:""},
+    {t:"The path of ignorance is guided by fear.", a:""},
+    {t:"The wise man leads, the strong man follows.", a:""},
+    {t:"Our actions define our legacy.", a:""},
+    {t:"Where we are going always reflects where we came from.", a:""},
+    {t:"Those who enslave others inevitably become slaves themselves.", a:""},
+    {t:"Great hope can come from small sacrifices.", a:""},
+    {t:"Friendship shows us who we really are.", a:""},
+    {t:"All warfare is based on deception.", a:""},
+    {t:"Keep your friends close, but keep your enemies closer.", a:""},
+    {t:"The strong survive, the noble overcome.", a:""},
+    {t:"Trust is the greatest of gifts, but it must be earned.", a:""},
+    {t:"One must let go of the past to hold onto the future.", a:""},
+    {t:"Who we are never changes, who we think we are does.", a:""},
+    {t:"A fallen enemy may rise again, but the reconciled one is truly vanquished.", a:""},
+    {t:"The enemy of my enemy is my friend.", a:""},
+    {t:"Strength in character can defeat strength in numbers.", a:""},
+    {t:"Fear is a malleable weapon.", a:""},
+    {t:"To seek something is to believe in its possibility.", a:""},
+    {t:"Struggles often begin and end with the truth.", a:""},
+    {t:"Disobedience is a demand for change.", a:""},
+    {t:"He who faces himself, finds himself.", a:""},
+    {t:"The young are often underestimated.", a:""},
+    {t:"When we rescue others, we rescue ourselves.", a:""},
+    {t:"Choose your enemies wisely, as they may be your last hope.", a:""},
+    {t:"Humility is the only defense against humiliation.", a:""},
+    {t:"When all seems hopeless, a true hero gives hope.", a:""},
+    {t:"A soldier's most powerful weapon is courage.", a:""},
+    {t:"You must trust in others, or success is impossible.", a:""},
+    {t:"One vision can have many interpretations.", a:""},
+    {t:"Alliances can stall true intentions.", a:""},
+    {t:"Morality separates heroes from villains.", a:""},
+    {t:"Sometimes even the smallest doubt can shake the greatest belief.", a:""},
+    {t:"Courage begins by trusting oneself.", a:""},
+    {t:"Never become desperate enough to trust the untrustworthy.", a:""},
+    {t:"Never give up hope, no matter how dark things seem.", a:""},
+    {t:"The truth about yourself is always the hardest to accept.", a:""},
+    {t:"The wise benefit from a second opinion.", a:""},
+    {t:"When in doubt, go to the source.", a:""},
+    {t:"The popular belief isn't always the correct one.", a:""},
+    {t:"To love, is to trust. To trust is to believe.", a:""},
+    {t:"Jealousy is the path to chaos.", a:""},
+    {t:"Deceit is the weapon of greed.", a:""},
+    {t:"Without darkness there cannot be light.", a:""},
+    {t:"Wisdom is born in fools as well as wise men.", a:""},
+    {t:"What is lost is often found.", a:""},
+    {t:"Madness can sometimes be the path to truth.", a:""},
+    {t:"Death is just the beginning.", a:""},
+    {t:"Facing all that you fear will free you from yourself.", a:""},
+    {t:"One crime has to be concealed by another.", a:""},
+    {t:"The journey is often more important than the destination.", a:""},
+    {t:"Absolute power corrupts absolutely.", a:""},
+    {t:"If at first you don't succeed, destroy it.", a:""},
+    {t:"The best defense is a strong offense.", a:""},
+    {t:"Wars are not won with superior weapons, but with superior strategy.", a:""},
+    {t:"In war there is no such thing as neutrality.", a:""},
+    {t:"Learn from the past, but live for the future.", a:""}
+  ];
+  let lastQuoteIdx = -1;
+  function getDailyIndex(){
+    const now = new Date();
+    const anchor = new Date(now);
+    if(now.getHours() < 7){ anchor.setDate(anchor.getDate()-1); } // pred 7.00 velja "včerajšnja" misel
+    anchor.setHours(0,0,0,0);
+    const epoch = new Date(2024,0,1); epoch.setHours(0,0,0,0);
+    const diffDays = Math.round((anchor - epoch) / 86400000);
+    return ((diffDays % quotes.length) + quotes.length) % quotes.length;
+  }
+  function showQuote(){
+    const idx = getDailyIndex();
+    if(idx === lastQuoteIdx) return;
+    lastQuoteIdx = idx;
+    document.getElementById('quote-text').textContent = '"' + quotes[idx].t + '"';
+    document.getElementById('quote-author').textContent = quotes[idx].a ? ('— ' + quotes[idx].a) : '';
+  }
+  setInterval(showQuote, 60000); // preveri vsako minuto, če je čas za novo misel (npr. čez 7.00)
+
+  // ================= TEDEN V ŠTEVILKAH (task load chart) =================
+  function dayStatus(dayIndex, todayIndex, count, doneCount){
+    const pct = count === 0 ? 0 : (doneCount / count) * 100;
+    if(dayIndex > todayIndex){
+      return { color:'rgba(255,255,255,0.16)', pct:0, locked:true };
+    }
+    if(dayIndex < todayIndex){
+      if(count === 0) return { color:'rgba(255,255,255,0.16)', pct:0, locked:false };
+      const ok = doneCount >= count;
+      return { color: ok ? 'var(--success)' : '#4a4d52', pct, locked:false };
+    }
+    // danes — lestvica glede na odstotek opravljenega
+    if(count === 0) return { color:'#4a4d52', pct:0, locked:false };
+    let color;
+    if(pct < 50) color = '#4a4d52';
+    else if(pct < 75) color = 'var(--amber)';
+    else color = 'var(--success)';
+    return { color, pct, locked:false };
+  }
+
+  function renderWeekLoad(){
+    const container = document.getElementById('load-chart');
+    const labelsRow = document.getElementById('load-labels');
+    const yaxis = document.getElementById('load-yaxis');
+    if(!container) return;
+    container.innerHTML='';
+    labelsRow.innerHTML='';
+    const counts = days.map(d => (plannerData[d]||[]).length);
+    const doneCounts = days.map(d => (plannerData[d]||[]).filter(t=>t.done).length);
+    const todayIndex = (new Date().getDay()+6)%7;
+    const SCALE_MAX = Math.max(10, ...counts); // fiksna lestvica do 10 nalog, da graf ni pretesen
+    const TRACK_PX = 260;
+
+    // Y os: 3 oznake - vrh, sredina, izhodišče
+    if(yaxis){
+      const mid = Math.round(SCALE_MAX/2);
+      yaxis.innerHTML = `<span>${SCALE_MAX}</span><span>${mid}</span><span>0</span>`;
+    }
+
+    days.forEach((d,i) => {
+      const count = counts[i];
+      const doneCount = doneCounts[i];
+      const status = dayStatus(i, todayIndex, count, doneCount);
+      const barHeightPx = count>0 ? Math.max(10, (count/SCALE_MAX)*TRACK_PX) : (status.locked ? 8 : 0);
+      const barColor = status.locked ? 'rgba(0,0,0,0.35)' : status.color;
+      let fracClass = 'empty';
+      if(!status.locked && count > 0){
+        const pct = (doneCount/count)*100;
+        fracClass = pct >= 75 ? 'ok' : (pct >= 50 ? 'mid' : 'bad');
+      }
+
+      const col = document.createElement('div'); col.className='load-col' + (status.locked ? ' locked' : '');
+      col.innerHTML = `<div class="load-bar" style="height:${barHeightPx}px; background:${barColor};" title="${status.locked ? '' : count}"></div>`;
+      container.appendChild(col);
+
+      const labelCol = document.createElement('div'); labelCol.className='load-col-label' + (status.locked ? ' locked' : '');
+      labelCol.innerHTML = `
+        <span class="load-day-label">${d}</span>
+        <span class="load-frac ${fracClass}">${status.locked ? '0/0' : doneCount+'/'+count}</span>
+      `;
+      labelsRow.appendChild(labelCol);
+    });
+  }
+
+  // ================= FINANČNI CILJ =================
+  let wealthGoal = 10000;
+  let wealthAccounts = { savings:0, bank:0, cash2:0, cash:0 };
+  const wealthSavingsInput = document.getElementById('wealth-savings-input');
+  const wealthBankInput = document.getElementById('wealth-bank-input');
+  const wealthCashInput = document.getElementById('wealth-cash-input');
+  const wealthCash2Input = document.getElementById('wealth-cash2-input');
+  const wealthPctEl = document.getElementById('wealth-pct');
+  const wealthFillEl = document.getElementById('wealth-fill');
+  const wealthCurrentLabel = document.getElementById('wealth-current-label');
+
+  function formatEUR(n){
+    return round2(n).toLocaleString('sl-SI', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+  }
+  function wealthTotal(){
+    return round2((wealthAccounts.savings||0) + (wealthAccounts.bank||0) + (wealthAccounts.cash2||0) + (wealthAccounts.cash||0));
+  }
+
+  let wealthMonthBaseline = null; // stanje vseh računov ob začetku tekočega meseca
+
+  // samodejno stopnjevanje cilja po 10.000 € (10k -> 20k -> 30k ...), pade nazaj, če stanje pade pod prag
+  function computeAutoGoal(total){
+    return Math.max(10000, Math.floor(total / 10000) * 10000 + 10000);
+  }
+
+  function renderWealth(){
+    const total = wealthTotal();
+
+    wealthGoal = computeAutoGoal(total);
+    if(wealthGoalInput){
+      wealthGoalInput.value = Math.round(wealthGoal).toLocaleString('sl-SI');
+      autosizeGoalInput();
+    }
+
+    const goalPct = Math.max(0, Math.min(100, (total / wealthGoal) * 100));
+    wealthFillEl.style.width = Math.max(goalPct, total > 0 ? 0.4 : 0) + '%';
+    wealthCurrentLabel.textContent = formatEUR(total);
+
+    // rast/padec tega meseca = trenutno stanje minus stanje ob začetku meseca
+    // (zajame tako vnose v Financah kot tudi ročno vpisane spremembe, npr. gotovine)
+    const txDelta = round2(
+      (finData?.transactions || []).reduce((s,t) => s + (t.type==='income' ? t.amount : -t.amount), 0)
+    );
+    const monthlyDelta = (wealthMonthBaseline !== null) ? round2(total - wealthMonthBaseline) : txDelta;
+    const sign = monthlyDelta >= 0 ? '+' : '−';
+    wealthPctEl.textContent = sign + Math.abs(monthlyDelta).toLocaleString('sl-SI',{minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+    wealthPctEl.classList.toggle('down', monthlyDelta < 0);
+    wealthPctEl.title = 'Sprememba od začetka meseca (vključno z ročnimi vnosi)';
+  }
+  let wealthTimer;
+  function parseAmount(str){
+    const raw = str.replace(/[^\d.,]/g, '').replace(',', '.');
+    const val = parseFloat(raw);
+    return isNaN(val) ? 0 : val;
+  }
+  function round2(n){
+    return Math.round((n + Number.EPSILON) * 100) / 100;
+  }
+  function bindWealthInput(input, key){
+    input.addEventListener('input', () => {
+      wealthAccounts[key] = round2(parseAmount(input.value));
+      renderWealth();
+      clearTimeout(wealthTimer);
+      wealthTimer = setTimeout(() => saveKey('axiom:wealth', wealthAccounts), 500);
+    });
+  }
+  bindWealthInput(wealthSavingsInput, 'savings');
+  bindWealthInput(wealthBankInput, 'bank');
+  bindWealthInput(wealthCash2Input, 'cash2');
+  bindWealthInput(wealthCashInput, 'cash');
+
+  // ================= SAMODEJEN CILJ PRIHRANKOV (po 10.000 € stopnjah) =================
+  const wealthGoalInput = document.getElementById('wealth-goal-input');
+  wealthGoalInput.readOnly = true;
+  wealthGoalInput.tabIndex = -1;
+  wealthGoalInput.style.cursor = 'default';
+  let goalMeasurer = null;
+  function autosizeGoalInput(){
+    if(!goalMeasurer){
+      goalMeasurer = document.createElement('span');
+      goalMeasurer.style.visibility = 'hidden';
+      goalMeasurer.style.position = 'absolute';
+      goalMeasurer.style.whiteSpace = 'pre';
+      goalMeasurer.style.font = getComputedStyle(wealthGoalInput).font;
+      document.body.appendChild(goalMeasurer);
+    }
+    goalMeasurer.textContent = wealthGoalInput.value || '0';
+    wealthGoalInput.style.width = (goalMeasurer.offsetWidth + 1) + 'px';
+  }
+
+  // ================= FINANČNI PLANER (prihodki/odhodki + tortna diagrama) =================
+  let finData = { transactions: [] };
+
+  // odtenki iste barvne družine - zelena za prihodke, rdeča za odhodke
+  const finIncomeColors = ['#0d4f2c','#15803d','#1fd97a','#4ade80','#86efac','#bbf7d0'];
+  const finExpenseColors = ['#ff5257','#f97316','#f43f5e','#fb7185','#c2410c','#e11d48','#fb923c','#be123c'];
+
+  function finCatColor(type, index){
+    const palette = type === 'income' ? finIncomeColors : finExpenseColors;
+    return palette[index % palette.length];
+  }
+
+  // ================= MESEČNO FINANČNO POROČILO (samostojna HTML datoteka za prenos) =================
+  function buildMonthlyReportHtml(transactions, monthLabel, yearLabel){
+    const income = transactions.filter(t=>t.type==='income');
+    const expense = transactions.filter(t=>t.type==='expense');
+    const sum = arr => arr.reduce((s,t)=>s+t.amount, 0);
+    const totalIncome = round2(sum(income));
+    const totalExpense = round2(sum(expense));
+    const net = round2(totalIncome - totalExpense);
+
+    function groupByCategory(arr){
+      const totals = {};
+      arr.forEach(t => {
+        const cat = normalizeCategory(t.category||'') || 'Ostalo';
+        totals[cat] = (totals[cat]||0) + t.amount;
+      });
+      return Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+    }
+    const incomeByCategory = groupByCategory(income);
+    const expenseByCategory = groupByCategory(expense);
+
+    const fmt = n => round2(n).toLocaleString('sl-SI',{minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+
+    function categoryRows(entries, total){
+      if(entries.length === 0) return '<tr><td colspan="3" class="muted">ni vnosov</td></tr>';
+      return entries.map(([cat, amt]) => {
+        const pct = total > 0 ? (amt/total*100) : 0;
+        return `<tr><td>${cat}</td><td class="num">${pct.toFixed(0)}%</td><td class="num">${fmt(amt)}</td></tr>`;
+      }).join('');
+    }
+
+    function txRows(arr){
+      const sorted = arr.slice().sort((a,b)=>a.ts-b.ts);
+      if(sorted.length === 0) return '<tr><td colspan="4" class="muted">ni vnosov</td></tr>';
+      return sorted.map(t => `
+        <tr>
+          <td>${t.dateLabel}</td>
+          <td>${normalizeCategory(t.category||'') || (t.type==='income'?'Prihodek':'Odhodek')}</td>
+          <td class="num ${t.type}">${t.type==='income'?'+':'−'}${fmt(t.amount)}</td>
+        </tr>`).join('');
+    }
+
+    return `<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<title>Finančno poročilo — ${monthLabel} ${yearLabel}</title>
+<style>
+  body{ font-family:'Inter',Arial,sans-serif; background:#0b0c10; color:#f2f3f5; margin:0; padding:40px 24px; }
+  .wrap{ max-width:720px; margin:0 auto; }
+  h1{ font-size:24px; margin:0 0 4px; }
+  .sub{ color:#888c96; font-size:13px; margin-bottom:32px; }
+  .summary{ display:flex; gap:14px; margin-bottom:32px; flex-wrap:wrap; }
+  .stat{ flex:1; min-width:150px; background:#17181e; border:1px solid rgba(255,255,255,0.09); border-radius:14px; padding:16px 18px; }
+  .stat .label{ font-size:11px; letter-spacing:0.6px; text-transform:uppercase; color:#888c96; margin-bottom:6px; }
+  .stat .val{ font-size:22px; font-weight:800; }
+  .stat.income .val{ color:#1fd97a; }
+  .stat.expense .val{ color:#ff5257; }
+  .stat.net .val{ color:${net>=0 ? '#1fd97a' : '#ff5257'}; }
+  h2{ font-size:14px; text-transform:uppercase; letter-spacing:1px; color:#888c96; border-bottom:1px solid rgba(255,255,255,0.09); padding-bottom:8px; margin:32px 0 12px; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  td, th{ padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.06); text-align:left; }
+  td.num{ text-align:right; font-weight:700; }
+  td.income{ color:#1fd97a; }
+  td.expense{ color:#ff5257; }
+  td.muted{ color:#888c96; font-style:italic; }
+  @media print{ body{ background:#fff; color:#111; } .stat{ border-color:#ccc; background:#f7f7f7; } h2{ border-color:#ccc; color:#555;} td,th{ border-color:#eee; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Finančno poročilo</h1>
+    <div class="sub">${monthLabel} ${yearLabel} · pripravljeno ${new Date().toLocaleDateString('sl-SI')}</div>
+
+    <div class="summary">
+      <div class="stat income"><div class="label">Prihodki</div><div class="val">+${fmt(totalIncome)}</div></div>
+      <div class="stat expense"><div class="label">Odhodki</div><div class="val">−${fmt(totalExpense)}</div></div>
+      <div class="stat net"><div class="label">Razlika</div><div class="val">${net>=0?'+':''}${fmt(net)}</div></div>
+    </div>
+
+    <h2>Prihodki po vrstah</h2>
+    <table><tbody>${categoryRows(incomeByCategory, totalIncome)}</tbody></table>
+
+    <h2>Odhodki po vrstah</h2>
+    <table><tbody>${categoryRows(expenseByCategory, totalExpense)}</tbody></table>
+
+    <h2>Vsi vnosi</h2>
+    <table><tbody>${txRows(transactions)}</tbody></table>
+  </div>
+</body>
+</html>`;
+  }
+
+  function downloadMonthlyReport(transactions, monthIdx, year){
+    const html = buildMonthlyReportHtml(transactions, monthsFullSl[monthIdx], year);
+    const blob = new Blob([html], {type:'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `financno-porocilo-${monthsSl[monthIdx]}-${year}.html`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function renderFinPie(type, pieEl, legendEl){
+    const totals = {};
+    finData.transactions.filter(t => t.type===type).forEach(t => {
+      const cat = normalizeCategory(t.category || '') || 'Ostalo';
+      totals[cat] = (totals[cat]||0) + t.amount;
+    });
+    const cats = Object.keys(totals);
+    const grandTotal = cats.reduce((s,c) => s + totals[c], 0);
+
+    if(cats.length === 0 || grandTotal <= 0){
+      pieEl.style.background = 'var(--panel-2)';
+      legendEl.innerHTML = `<div class="fin-empty">še ni zabeleženih ${type==='income' ? 'prihodkov' : 'odhodkov'}</div>`;
+      return;
+    }
+    cats.sort((a,b) => totals[b]-totals[a]);
+    let acc = 0;
+    const stops = [];
+    cats.forEach((cat,i) => {
+      const pct = (totals[cat]/grandTotal)*100;
+      stops.push(`${finCatColor(type,i)} ${acc}% ${acc+pct}%`);
+      acc += pct;
+    });
+    pieEl.style.background = `conic-gradient(${stops.join(', ')})`;
+    legendEl.innerHTML = cats.map((cat,i) => {
+      const pct = (totals[cat]/grandTotal)*100;
+      return `
+        <div class="fin-legend-row">
+          <span class="fin-legend-dot" style="background:${finCatColor(type,i)}"></span>
+          <span class="fin-legend-cat">${escapeHtml(cat)}</span>
+          <span class="fin-legend-pct">${pct.toFixed(0)}%</span>
+          <span class="fin-legend-amt">${totals[cat].toLocaleString('sl-SI',{maximumFractionDigits:2})} €</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderFinance(){
+    const historyEl = document.getElementById('fin-history');
+    if(!historyEl) return;
+
+    const txs = finData.transactions.slice().sort((a,b) => b.ts - a.ts);
+    if(txs.length === 0){
+      historyEl.innerHTML = '<div class="fin-empty">še ni vnosov</div>';
+    } else {
+      historyEl.innerHTML = txs.map(t => `
+        <div class="fin-tx-row" data-id="${t.id}">
+          <span class="fin-tx-cat">${escapeHtml(normalizeCategory(t.category||'') || (t.type==='income' ? 'Prihodek' : 'Odhodek'))}</span>
+          <span class="fin-tx-date">${t.dateLabel}</span>
+          <span class="fin-tx-amt ${t.type}">${t.type==='income' ? '+' : '−'}${t.amount.toLocaleString('sl-SI',{maximumFractionDigits:2})} €</span>
+          <span class="fin-tx-del" data-del="${t.id}">✕</span>
+        </div>
+      `).join('');
+      historyEl.querySelectorAll('[data-del]').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = el.dataset.del;
+          const tx = finData.transactions.find(t => String(t.id) === String(id));
+          if(!tx) return;
+          // razveljavi učinek na bančni račun
+          wealthAccounts.bank = round2((wealthAccounts.bank||0) - (tx.type==='income' ? tx.amount : -tx.amount));
+          wealthBankInput.value = wealthAccounts.bank ? wealthAccounts.bank.toLocaleString('sl-SI',{maximumFractionDigits:2}) : '';
+          renderWealth();
+          saveKey('axiom:wealth', wealthAccounts);
+
+          finData.transactions = finData.transactions.filter(t => String(t.id) !== String(id));
+          saveKey('axiom:finance', finData);
+          renderFinance();
+
+          showUndoToast(tx.type==='income' ? 'Prihodek izbrisan' : 'Odhodek izbrisan', () => {
+            finData.transactions.push(tx);
+            saveKey('axiom:finance', finData);
+            wealthAccounts.bank = round2((wealthAccounts.bank||0) + (tx.type==='income' ? tx.amount : -tx.amount));
+            wealthBankInput.value = wealthAccounts.bank ? wealthAccounts.bank.toLocaleString('sl-SI',{maximumFractionDigits:2}) : '';
+            renderWealth();
+            saveKey('axiom:wealth', wealthAccounts);
+            renderFinance();
+          });
+        });
+      });
+    }
+
+    renderFinPie('income', document.getElementById('fin-pie-income'), document.getElementById('fin-legend-income'));
+    renderFinPie('expense', document.getElementById('fin-pie-expense'), document.getElementById('fin-legend-expense'));
+  }
+
+  function normalizeCategory(str){
+    const trimmed = str.trim().replace(/\s+/g, ' ');
+    if(!trimmed) return '';
+    return trimmed.charAt(0).toLocaleUpperCase('sl-SI') + trimmed.slice(1).toLocaleLowerCase('sl-SI');
+  }
+
+  function addFinTransaction(type){
+    const amountInput = document.getElementById(type==='income' ? 'fin-income-amount' : 'fin-expense-amount');
+    const catInput = document.getElementById(type==='income' ? 'fin-income-category' : 'fin-expense-category');
+    const amount = parseAmount(amountInput.value);
+    if(amount <= 0){ flashInputError(amountInput); return; }
+    const category = normalizeCategory(catInput.value);
+    const now = new Date();
+
+    finData.transactions.push({
+      id: Date.now() + '-' + Math.random().toString(36).slice(2,7),
+      type, amount, category,
+      ts: now.getTime(),
+      dateLabel: now.getDate() + '. ' + monthsSl[now.getMonth()]
+    });
+    saveKey('axiom:finance', finData);
+
+    wealthAccounts.bank = round2((wealthAccounts.bank||0) + (type==='income' ? amount : -amount));
+    wealthBankInput.value = wealthAccounts.bank ? wealthAccounts.bank.toLocaleString('sl-SI',{maximumFractionDigits:2}) : '';
+    renderWealth();
+    saveKey('axiom:wealth', wealthAccounts);
+
+    amountInput.value = ''; catInput.value = '';
+    renderFinance();
+  }
+
+  document.getElementById('fin-income-add').addEventListener('click', () => addFinTransaction('income'));
+  document.getElementById('fin-expense-add').addEventListener('click', () => addFinTransaction('expense'));
+  [['fin-income-amount','fin-income-category'],['fin-expense-amount','fin-expense-category']].forEach(([a,c],idx) => {
+    [a,c].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', e => {
+        if(e.key === 'Enter') addFinTransaction(idx===0 ? 'income' : 'expense');
+      });
+    });
+  });
+
+  // ================= MIND MAP =================
+  let mindmap = {nodes: [], edges: []};
+  let linkingNodeId = null;
+  let dragMoved = false;
+
+  function renderMindmap(){
+    const area = document.getElementById('mindmap-area');
+    area.querySelectorAll('.node').forEach(n=>n.remove());
+    const existingEmpty = area.querySelector('.mindmap-empty');
+    if(mindmap.nodes.length===0){
+      if(!existingEmpty){
+        const e = document.createElement('div');
+        e.className='mindmap-empty';
+        e.textContent='Dodaj svojo prvo idejo zgoraj — nato klikni dve vozlišči, da ju povežeš.';
+        area.appendChild(e);
+      }
+    } else if(existingEmpty){ existingEmpty.remove(); }
+
+    mindmap.nodes.forEach(node => {
+      const el = document.createElement('div');
+      el.className = 'node' + (linkingNodeId===node.id ? ' linking' : '');
+      el.style.left = node.x+'px';
+      el.style.top = node.y+'px';
+      el.innerHTML = `${escapeHtml(node.text)}<span class="node-del">✕</span>`;
+      el.querySelector('.node-del').addEventListener('click', e => { e.stopPropagation(); deleteNode(node.id); });
+      el.addEventListener('click', () => {
+        if(dragMoved){ dragMoved=false; return; }
+        handleNodeClick(node.id);
+      });
+      makeDraggable(el, node);
+      area.appendChild(el);
+    });
+    drawEdges();
+  }
+
+  function handleNodeClick(id){
+    if(linkingNodeId===null){
+      linkingNodeId = id;
+      renderMindmap();
+    } else if(linkingNodeId===id){
+      linkingNodeId = null;
+      renderMindmap();
+    } else {
+      const existing = mindmap.edges.find(e => (e.from===linkingNodeId && e.to===id) || (e.from===id && e.to===linkingNodeId));
+      if(existing){ mindmap.edges = mindmap.edges.filter(e=>e!==existing); }
+      else { mindmap.edges.push({id:uid(), from:linkingNodeId, to:id}); }
+      linkingNodeId = null;
+      saveKey('axiom:mindmap', mindmap);
+      renderMindmap();
+    }
+  }
+
+  function deleteNode(id){
+    const removedNode = mindmap.nodes.find(n=>n.id===id);
+    const removedEdges = mindmap.edges.filter(e=>e.from===id || e.to===id);
+    mindmap.nodes = mindmap.nodes.filter(n=>n.id!==id);
+    mindmap.edges = mindmap.edges.filter(e=>e.from!==id && e.to!==id);
+    if(linkingNodeId===id) linkingNodeId=null;
+    saveKey('axiom:mindmap', mindmap);
+    renderMindmap();
+
+    if(removedNode){
+      showUndoToast('Vozlišče izbrisano', () => {
+        mindmap.nodes.push(removedNode);
+        mindmap.edges.push(...removedEdges);
+        saveKey('axiom:mindmap', mindmap);
+        renderMindmap();
+      });
+    }
+  }
+
+  function drawEdges(){
+    const svg = document.getElementById('mindmap-svg');
+    svg.innerHTML='';
+    mindmap.edges.forEach(edge => {
+      const from = mindmap.nodes.find(n=>n.id===edge.from);
+      const to = mindmap.nodes.find(n=>n.id===edge.to);
+      if(!from || !to) return;
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1', from.x); line.setAttribute('y1', from.y);
+      line.setAttribute('x2', to.x); line.setAttribute('y2', to.y);
+      svg.appendChild(line);
+    });
+  }
+
+  function makeDraggable(el, node){
+    let startX, startY, origX, origY, dragging=false;
+    el.addEventListener('pointerdown', e => {
+      if(e.target.closest('.node-del')) return; // klik na X - ne začni vlečenja
+      dragging = true; dragMoved = false;
+      startX = e.clientX; startY = e.clientY; origX = node.x; origY = node.y;
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', e => {
+      if(!dragging) return;
+      const dx = e.clientX-startX, dy = e.clientY-startY;
+      if(Math.abs(dx)>3 || Math.abs(dy)>3) dragMoved = true;
+      if(!dragMoved) return;
+      const area = document.getElementById('mindmap-area');
+      const rect = area.getBoundingClientRect();
+      let nx = origX+dx, ny = origY+dy;
+      nx = Math.max(24, Math.min(rect.width-24, nx));
+      ny = Math.max(24, Math.min(rect.height-24, ny));
+      node.x = nx; node.y = ny;
+      el.style.left = nx+'px'; el.style.top = ny+'px';
+      drawEdges();
+    });
+    el.addEventListener('pointerup', () => {
+      dragging = false;
+      if(dragMoved) saveKey('axiom:mindmap', mindmap);
+    });
+  }
+
+  document.getElementById('node-add-btn').addEventListener('click', addNode);
+  document.getElementById('node-input').addEventListener('keydown', e => { if(e.key==='Enter') addNode(); });
+  function addNode(){
+    const input = document.getElementById('node-input');
+    if(!input.value.trim()) return;
+    const area = document.getElementById('mindmap-area');
+    const rect = area.getBoundingClientRect();
+    const w = Math.max(rect.width, 300), h = Math.max(rect.height, 300);
+    const x = 70 + Math.random()*(w-140);
+    const y = 60 + Math.random()*(h-120);
+    mindmap.nodes.push({id:uid(), text:input.value.trim(), x, y});
+    saveKey('axiom:mindmap', mindmap);
+    input.value='';
+    renderMindmap();
+  }
+  document.getElementById('mindmap-clear').addEventListener('click', function(){
+    armConfirm(this, () => {
+      mindmap = {nodes:[], edges:[]};
+      linkingNodeId = null;
+      saveKey('axiom:mindmap', mindmap);
+      renderMindmap();
+    }, 'klikni še enkrat');
+  });
+
+  // ================= RESET =================
+
+  document.getElementById('reset-all').addEventListener('click', function(){
+    armConfirm(this, async () => {
+      const keys = ['axiom:planner','axiom:notes','axiom:notes-pages','axiom:mindmap','axiom:wealth','axiom:work','axiom:finance','axiom:wealthgoal','axiom:finance-month','axiom:wealth-month','axiom:wealth-baseline','axiom:wealth-adjust-2026-9'];
+      for(const k of keys){
+        try{
+          if(storageMode==='claude') await window.storage.delete(k, false);
+          else if(storageMode==='local') localStorage.removeItem(k);
+        }catch(e){}
+      }
+      location.reload();
+    }, 'klikni še enkrat za potrditev');
+  });
+
+  // ================= INIT =================
+  async function init(){
+    await checkStorage();
+
+    plannerData = await loadKey('axiom:planner', {});
+    renderPlanner();
+
+    function textToHtml(str){
+      return escapeHtml(str || '').split('\n').join('<br>');
+    }
+    const savedPages = await loadKey('axiom:notes-pages', null);
+    if(Array.isArray(savedPages) && savedPages.length > 0){
+      // migracija posameznih zapiskov, ki so morda še v starem formatu (text namesto html)
+      notesPages = savedPages.map(n => ({
+        id: n.id || uid(),
+        html: (typeof n.html === 'string') ? n.html : textToHtml(n.text || ''),
+        updatedAt: n.updatedAt || Date.now()
+      }));
+    } else {
+      // migracija starega enojnega zapiska (če obstaja) v nov sistem strani
+      const oldNote = await loadKey('axiom:notes', '');
+      notesPages = oldNote ? [{ id: uid(), html: textToHtml(oldNote), updatedAt: Date.now() }] : [];
+    }
+    ensureAtLeastOneNote();
+    renderNotesPreview();
+    notesAutosave.textContent = 'shranjeno';
+
+    showQuote();
+
+    mindmap = await loadKey('axiom:mindmap', {nodes:[], edges:[]});
+    renderMindmap();
+
+    const savedWealth = await loadKey('axiom:wealth', null);
+    if(savedWealth && typeof savedWealth === 'object'){
+      wealthAccounts = { savings: savedWealth.savings||0, bank: savedWealth.bank||0, cash2: savedWealth.cash2||0, cash: savedWealth.cash||0 };
+    } else {
+      wealthAccounts = { savings:0, bank:0, cash2:0, cash:0 };
+    }
+    wealthSavingsInput.value = wealthAccounts.savings || '';
+    wealthBankInput.value = wealthAccounts.bank || '';
+    wealthCash2Input.value = wealthAccounts.cash2 || '';
+    wealthCashInput.value = wealthAccounts.cash || '';
+
+    const savedFin = await loadKey('axiom:finance', null);
+    finData = (savedFin && Array.isArray(savedFin.transactions)) ? savedFin : { transactions: [] };
+
+    // mesečni reset: če se je mesec spremenil od zadnjega obiska, počisti transakcije
+    // (bančni račun ostane nedotaknjen - to je pravi denar, ne le mesečni pregled)
+    const now = new Date();
+    const currentMonthKey = now.getFullYear() + '-' + now.getMonth();
+    const storedMonthKey = await loadKey('axiom:finance-month', null);
+    if(storedMonthKey !== currentMonthKey){
+      // samodejno prenesi poročilo PREJŠNJEGA meseca, preden se podatki počistijo
+      if(storedMonthKey && finData.transactions.length > 0){
+        const [prevYear, prevMonthIdx] = storedMonthKey.split('-').map(Number);
+        downloadMonthlyReport(finData.transactions, prevMonthIdx, prevYear);
+      }
+      finData = { transactions: [] };
+      await saveKey('axiom:finance', finData);
+      await saveKey('axiom:finance-month', currentMonthKey);
+    }
+
+    // mesečno izhodišče stanja: če je nov mesec (ali prvi zagon), ga postavi; sicer naloži shranjenega
+    const storedWealthMonth = await loadKey('axiom:wealth-month', null);
+    const storedBaseline = await loadKey('axiom:wealth-baseline', null);
+    if(storedWealthMonth !== currentMonthKey || typeof storedBaseline !== 'number'){
+      // izhodišče = trenutno stanje minus že vnesene transakcije tega meseca,
+      // da se transakcije, vnesene pred to nadgradnjo, takoj pravilno upoštevajo
+      const txDeltaNow = round2(
+        finData.transactions.reduce((s,t) => s + (t.type==='income' ? t.amount : -t.amount), 0)
+      );
+      wealthMonthBaseline = round2(wealthTotal() - txDeltaNow);
+      await saveKey('axiom:wealth-month', currentMonthKey);
+      await saveKey('axiom:wealth-baseline', wealthMonthBaseline);
+    } else {
+      wealthMonthBaseline = storedBaseline;
+    }
+
+    // ENKRATNI POPRAVEK (oktober 2026): mesečni spremembi dodaj +150 €, ne da bi spremenil dejanska stanja računov.
+    // Spremenimo samo izhodišče (nižje izhodišče = višja mesečna sprememba). Izvede se natanko enkrat.
+    if(currentMonthKey === '2026-9'){
+      const adjDone = await loadKey('axiom:wealth-adjust-2026-9', null);
+      if(!adjDone){
+        wealthMonthBaseline = round2(wealthMonthBaseline - 150);
+        await saveKey('axiom:wealth-baseline', wealthMonthBaseline);
+        await saveKey('axiom:wealth-adjust-2026-9', true);
+      }
+    }
+
+    renderWealth();
+
+    renderFinance();
+
+    document.getElementById('fin-report-btn').addEventListener('click', () => {
+      downloadMonthlyReport(finData.transactions, now.getMonth(), now.getFullYear());
+    });
+  }
+
+  init();
+
+  // ================= FULLSCREEN NAČIN ZA CILJE (MISELNA MREŽA) =================
+  const mindmapSection = document.getElementById('mindmap-section');
+  const mindmapFullscreenBtn = document.getElementById('mindmap-fullscreen-btn');
+  const mindmapCloseBtn = document.getElementById('mindmap-close-btn');
+
+  function setMindmapFullscreen(on){
+    mindmapSection.classList.toggle('fullscreen', on);
+    document.body.classList.toggle('mindmap-fullscreen-active', on);
+  }
+
+  mindmapFullscreenBtn.addEventListener('click', () => {
+    setMindmapFullscreen(!mindmapSection.classList.contains('fullscreen'));
+  });
+  mindmapCloseBtn.addEventListener('click', () => setMindmapFullscreen(false));
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){
+      if(mindmapSection.classList.contains('fullscreen')) setMindmapFullscreen(false);
+      if(notesOverlay.classList.contains('show')) closeNotesFullscreen();
+    }
+  });
+})();
+</script>
+</body>
+</html>
